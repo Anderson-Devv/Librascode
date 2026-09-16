@@ -1,7 +1,7 @@
 # 📚 LIBRASCODE
 
-O LibrasCode é um jogo de aprendizagem de LIBRAS(Lingua Brasileira de Sinais) feito pelo pygame com o intuito de ensinar as pessoas que querem aprender sobre
-a nossa linguagem de sinais e para podermos inserir mais e melhor as pessoas surdas no ramo da educação e tecnologia
+O LibrasCode é um jogo de aprendizagem de LIBRAS (Língua Brasileira de Sinais) feito pelo pygame com o intuito de ensinar as pessoas que querem aprender sobre
+a nossa linguagem de sinais e podermos promover uma inclusão eficaz de pessoas deficientes-auditivos na educação e sociedade num contexto geral.
 
 ---
 
