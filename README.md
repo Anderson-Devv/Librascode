@@ -8,7 +8,7 @@ a nossa linguagem de sinais e podermos promover uma inclusão eficaz de pessoas 
 
 ---
 
-## 🚀 Release 1.0
+## 🚀 Release beta 0.1
 
 | Funcionalidade                     | Descrição                                                                 |
 | ---------------------------------- | ------------------------------------------------------------------------- |
