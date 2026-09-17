@@ -8,10 +8,14 @@ a nossa linguagem de sinais e podermos promover uma inclusão eficaz de pessoas 
 
 ## 🚀 Release beta 0.1
 
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/f96ba174-d097-47da-94ac-8465634e1908" />
+
 | Funcionalidade                     | Descrição                                                                 |
 | ---------------------------------- | ------------------------------------------------------------------------- |
 | Cadastro de usuários               | Permite que novos usuários criem uma conta no sistema.                    |
 | Login                              | Permite que o usuário entre no sistema utilizando seus dados cadastrados. |
-| Tela inicial                       | Apresenta as principais opções disponíveis para o usuário.                |
 | Conteúdos de programação em Libras | Permite acessar conteúdos de programação apresentados em Libras.          |
-| Organização por temas              | Organiza os conteúdos de programação em diferentes temas.                 |
+| Sistema de pontuação               | Calcula os pontos com base nos acertos do usuario                         |
+| Deleção de conta                   | Permite o usuário deletar sua conta do sistema                            |
+
+
