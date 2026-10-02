@@ -7,7 +7,7 @@ a nossa linguagem de sinais e podermos promover uma inclusão eficaz de pessoas 
 ---
 <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/f96ba174-d097-47da-94ac-8465634e1908" />
 
-## 🚀 Release beta 0.1
+## 🚀 Release beta 1.0
 
 | Funcionalidade                     | Descrição                                                                 |
 | ---------------------------------- | ------------------------------------------------------------------------- |
