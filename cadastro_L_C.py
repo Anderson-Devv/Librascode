@@ -1,19 +1,20 @@
-from librascode import conexao_banco
+from librascodebd import conexao_banco
 
 conexao = conexao_banco()
 
-cursor = conexao.cursor()
+print(conexao)
 
+cursor = conexao.cursor()
 #CRUD
 
-comando = f'SELECT * FROM testebancodados'
+# comando = f'SELECT * FROM testebancodados'
 
-usuario = (input('digite o nome do novo usuário'))
-senha = (input('digite a sua senha'))
-comando = f'INSERT INTO librascode (usuario, senha) VALUES (  %s, %s )'
-VALUES = (usuario, senha)
-cursor.execute(comando, VALUES)
-conexao.commit() #edita banco de dados
+# usuario = (input('digite o nome do novo usuário'))
+# senha = (input('digite a sua senha'))
+# comando = f'INSERT INTO librascode (usuario, senha) VALUES (  %s, %s )'
+# VALUES = (usuario, senha)
+# cursor.execute(comando, VALUES)
+# conexao.commit() #edita banco de dados
 
 
 #CREATE
