@@ -33,35 +33,40 @@ def cabeçalho(txt):
     
 def menu(lista):
     cabeçalho('LIBRASCODE')
-    c = 1
+    opçoes = 1
     for item in lista:
-        print(f'{c} {item}')
-        c += 1
+        print(f'{opçoes} {item}')
+        opçoes += 1
     print(linha())
     opc = LeiaInt('Sua opção: ')
     return opc 
 
 while True:
-    resposta = menu(['. cadastrar novo usuário', '. logar exibir perfil', '. alterar informações', '. Sair'])    
+    resposta = menu(['. cadastrar novo usuário', '. exibir perfil', '. alterar informações', '. Sair'])    
     if resposta == 1:
         print('cadastrar novo usuário: \n')
-        usuario = input("Digite o nome do novo usuário: \n")
-        senha = input("Digite a nova senha: \n")
-        while len(senha) < 8:
-            print('Senha precisa ter pelo menos 8 caracteres.')
+        email = input("Digite seu email: \n")
+        while True: 
+            if "@ufrpe.br" not in email:
+                print('email inválido, digite um email válido (com @ufrpe.br)')
+                break
             senha = input("Digite a nova senha: \n")
-
-        cursor.execute(
-            "INSERT INTO cadastrolibrascode (usuario, senha) VALUES (%s, %s)",
-            (usuario, senha),
-        )
-        conexao.commit()
-        print('Usuário cadastrado com sucesso')
+            while True: 
+                if len(senha) < 8:
+                    print('senha precisa ter pelo menos 8 caracteres')
+                    break
+                else:
+                    usuario = input("Digite o nome do novo usuário: \n")
+                    comando = f'INSERT INTO cadastrolibrascode (usuario, senha, email) VALUES ("{usuario}", "{senha}", "{email}")'
+                    print('Usuário cadastrado com sucesso')
+                    cursor.execute(comando)
+                    conexao.commit()
+                    break
     elif resposta == 2:
         for tentativa in range(3):
-            login = input("Digite seu login para ver se está cadastrado: ")
+            login = input("Digite seu login (seu email) para ver se está cadastrado: ")
             cursor.execute(
-                "SELECT usuario FROM cadastrolibrascode WHERE usuario = %s",
+                "SELECT usuario FROM cadastrolibrascode WHERE email = %s",
                 (login,),
             )
             resultado = cursor.fetchone()
@@ -100,40 +105,6 @@ while True:
         break
     else:
         print('\033[31mErro, opção inválida! Tente novamente.\033[m')
-
-#CRUD
-
-#comando = f'SELECT * FROM cadastrolibrascode'
-#cursor.execute(comando)
-#conexao.commit() #edita banco de dados
-#resultado = cursor.fetchall() # ler banco de dados
-#print(resultado)
-
-#CREATE
-#usuario = input("Digite o nome do novo usuário: ")
-#senha = input("Digite a nova senha: ")
-#comando = f'INSERT INTO cadastrolibrascode (usuario, senha) VALUES ("{usuario}", "{senha}")'
-#cursor.execute(comando)
-#conexao.commit() # edita banco de dados
-
-#READ
-#comando = f'SELECT * FROM cadastrolibrascode'
-#cursor.execute(comando)
-#resultado = cursor.fetchall() # ler banco de dados
-#print(resultado)
-
-#UPDATE
-#usuario = ""
-#senha = ""
-#comando = f'UPDATE cadastrolibrascode SET senha = "{senha}" WHERE usuario = "{usuario}"'
-#cursor.execute(comando)
-#conexao.commit() #edita banco de dados
-
-#DELETE
-#usuario = input("Digite o usuário que deseja deletar: ")
-#comando = f'DELETE FROM cadastrolibrascode WHERE usuario = "{usuario}"'
-#cursor.execute(comando)
-#conexao.commit() #edita banco de dados
 
 cursor.close()
 conexao.close()
