@@ -1,11 +1,8 @@
-import mysql.connector
+from librascodebd import conexao_banco
+from time import sleep
+import os
 
-conexao = mysql.connector.connect(
-    host ='localhost',
-    user ='root',
-    password ='Lga1155.',
-    database ='et',
-)
+conexao = conexao_banco()
 
 cursor = conexao.cursor()
 
@@ -47,61 +44,82 @@ while True:
         print('cadastrar novo usuário: \n')
         email = input("Digite seu email: \n")
         while True: 
-            if "@ufrpe.br" not in email:
-                print('email inválido, digite um email válido (com @ufrpe.br)')
-                break
-            senha = input("Digite a nova senha: \n")
-            while True: 
-                if len(senha) < 8:
-                    print('senha precisa ter pelo menos 8 caracteres')
-                    break
+                if "@ufrpe.br" not in email:
+                    print('email inválido, digite um email válido (com @ufrpe.br)')
+                    os.system('cls' if os.name == 'nt' else 'clear')
+
                 else:
-                    usuario = input("Digite o nome do novo usuário: \n")
-                    comando = f'INSERT INTO cadastrolibrascode (usuario, senha, email) VALUES ("{usuario}", "{senha}", "{email}")'
-                    print('Usuário cadastrado com sucesso')
-                    cursor.execute(comando)
-                    conexao.commit()
                     break
+        senha = input("Digite a nova senha: \n")
+        while True: 
+            if len(senha) < 8:
+                print('senha precisa ter pelo menos 8 caracteres, digite novamente')
+                sleep(2)
+                os.system('cls' if os.name == 'nt' else 'clear')
+
+            
+            else:
+                usuario = input("Digite o nome do novo usuário: \n")
+                comando = f'INSERT INTO librascode (usuario, senha, email) VALUES ("{usuario}", "{senha}", "{email}")'
+                print('Usuário cadastrado com sucesso')
+                cursor.execute(comando)
+                conexao.commit()
+                sleep(2)
+                os.system('cls' if os.name == 'nt' else 'clear')
+                break
+
     elif resposta == 2:
         for tentativa in range(3):
             login = input("Digite seu login (seu email) para ver se está cadastrado: ")
             cursor.execute(
-                "SELECT usuario FROM cadastrolibrascode WHERE email = %s",
+                "SELECT usuario FROM librascode WHERE email = %s",
                 (login,),
             )
             resultado = cursor.fetchone()
+            sleep(2)
+            os.system('cls' if os.name == 'nt' else 'clear')
 
             if resultado:
-                print(f"Usuário cadastrado: {resultado[0]}")
+                print(f"Usuário cadastrado: {resultado[0]} ")
+                sleep(2)
+                os.system('cls' if os.name == 'nt' else 'clear')
                 break
 
             print(f"Erro {tentativa + 1}/3: usuário não encontrado.")
             if tentativa == 2:
                 print("Limite de tentativas atingido. Voltando ao menu principal.")
+                sleep(2)
+                os.system('cls' if os.name == 'nt' else 'clear')
     elif resposta == 3:
         for tentativa1 in range(3):
                     usuario = input("Digite o usuário que deseja deletar: ")
                     cursor.execute(
-                        "SELECT 1 FROM cadastrolibrascode WHERE usuario = %s",
+                        "SELECT 1 FROM librascode WHERE usuario = %s",
                         (usuario,),
                     )
                     resultado = cursor.fetchone()
         
                     if resultado:
                         cursor.execute(
-                            "DELETE FROM cadastrolibrascode WHERE usuario = %s",
+                            "DELETE FROM librascode WHERE usuario = %s",
                             (usuario,),
                         )
                         conexao.commit()
                         print('Usuário deletado com sucesso')
+                        sleep(1)
+                        os.system('cls' if os.name == 'nt' else 'clear')
                         break
         
                     print(f"Erro {tentativa1 + 1}/3: usuário não encontrado.")
                     if tentativa1 == 2:
                         print("Limite de tentativas atingido. Voltando ao menu principal.")
+                        sleep(2)
+                        os.system('cls' if os.name == 'nt' else 'clear')
                         
     elif resposta == 4:
         print('Saindo do Sistema... Até mais')
+        sleep(2)
+        os.system('cls' if os.name == 'nt' else 'clear')
         break
     else:
         print('\033[31mErro, opção inválida! Tente novamente.\033[m')
