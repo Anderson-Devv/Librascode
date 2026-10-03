@@ -14,7 +14,7 @@ def LeiaInt(msg):
             print('\033[31mErro: por favor, digite um número válido.\033[m')
             continue
         except (KeyboardInterrupt):
-            print('\033[31Usuário não digitou esse número.\033[m')
+            print('\033[31 Usuário não digitou esse número.\033[m')
             return 0
         else:
             return n
@@ -39,34 +39,56 @@ def menu(lista):
     return opc 
 
 while True:
-    resposta = menu(['. cadastrar novo usuário', '. exibir perfil', '. alterar informações', '. Sair'])    
+    resposta = menu(['. cadastrar novo usuário', '. exibir perfil', '. Deletar Conta', '. Sair'])    
     if resposta == 1:
         print('cadastrar novo usuário: \n')
-        email = input("Digite seu email: \n")
-        while True: 
-                if "@ufrpe.br" not in email:
-                    print('email inválido, digite um email válido (com @ufrpe.br)')
-                    os.system('cls' if os.name == 'nt' else 'clear')
+        while True:
+            email = input("Digite seu email(apenas institucional): \n")
+            cursor.execute(
+                "SELECT email FROM librascode WHERE email = %s LIMIT 1",
+                (email,)
+            )
+            resultado = cursor.fetchone() 
+            if "@ufrpe.br" not in email:
+                print('email inválido, digite um email válido (com @ufrpe.br)')
+                sleep(2)
+                os.system('cls' if os.name == 'nt' else 'clear')
+            elif resultado is not None:
+                print("Este email ja esta cadastrado!!")
+                sleep(2)
+                os.system('cls' if os.name == 'nt' else 'clear')
 
-                else:
-                    break
-        senha = input("Digite a nova senha: \n")
-        while True: 
+            else:
+                break
+        while True:
+            senha = input("Digite a nova senha(min 8 caracteres/max 15 caracteres): \n") 
             if len(senha) < 8:
                 print('senha precisa ter pelo menos 8 caracteres, digite novamente')
                 sleep(2)
                 os.system('cls' if os.name == 'nt' else 'clear')
-
-            
             else:
-                usuario = input("Digite o nome do novo usuário: \n")
-                comando = f'INSERT INTO librascode (usuario, senha, email) VALUES ("{usuario}", "{senha}", "{email}")'
-                print('Usuário cadastrado com sucesso')
-                cursor.execute(comando)
-                conexao.commit()
-                sleep(2)
-                os.system('cls' if os.name == 'nt' else 'clear')
                 break
+        while True:
+                usuario = input("Digite o nome do novo usuário(max 15 caracteres): \n")
+                cursor.execute(
+                     "SELECT usuario FROM librascode WHERE usuario = %s LIMIT 1",
+                     (usuario,)
+                )
+                resultado = cursor.fetchone()
+                if resultado is not None:
+                    print("Esse nome de usuário ja existe!!")
+                    sleep(2)
+                    os.system('cls' if os.name == 'nt' else 'clear')                     
+
+                else:
+                    comando = f'INSERT INTO librascode (usuario, senha, email) VALUES ("{usuario}", "{senha}", "{email}")'
+                    print('Usuário cadastrado com sucesso')
+                    cursor.execute(comando)
+                    conexao.commit()
+                    sleep(2)
+                    os.system('cls' if os.name == 'nt' else 'clear')
+                    break
+
 
     elif resposta == 2:
         for tentativa in range(3):
@@ -76,16 +98,16 @@ while True:
                 (login,),
             )
             resultado = cursor.fetchone()
-            sleep(2)
-            os.system('cls' if os.name == 'nt' else 'clear')
 
-            if resultado:
+            if resultado is not None:
                 print(f"Usuário cadastrado: {resultado[0]} ")
                 sleep(2)
                 os.system('cls' if os.name == 'nt' else 'clear')
                 break
 
             print(f"Erro {tentativa + 1}/3: usuário não encontrado.")
+            sleep(2)
+            os.system('cls' if os.name == 'nt' else 'clear')
             if tentativa == 2:
                 print("Limite de tentativas atingido. Voltando ao menu principal.")
                 sleep(2)
