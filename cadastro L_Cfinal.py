@@ -1,12 +1,6 @@
-import mysql.connector
+from librascodebd import conexao_banco
 
-conexao = mysql.connector.connect(
-    host ='localhost',
-    user ='root',
-    password ='Lga1155.',
-    database ='et',
-)
-
+conexao = conexao_banco()
 cursor = conexao.cursor()
 
 def LeiaInt(msg):
