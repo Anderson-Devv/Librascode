@@ -1,7 +1,8 @@
 from librascodebd import conexao_banco
+from time import sleep
+import os
 
 conexao = conexao_banco()
-
 cursor = conexao.cursor()
 
 def LeiaInt(msg):
@@ -12,7 +13,7 @@ def LeiaInt(msg):
             print('\033[31mErro: por favor, digite um número válido.\033[m')
             continue
         except (KeyboardInterrupt):
-            print('\033[31Usuário não digitou esse número.\033[m')
+            print('\033[31 Usuário não digitou esse número.\033[m')
             return 0
         else:
             return n
@@ -28,46 +29,92 @@ def cabeçalho(txt):
     
 def menu(lista):
     cabeçalho('LIBRASCODE')
-    c = 1
+    opçoes = 1
     for item in lista:
-        print(f'{c} {item}')
-        c += 1
+        print(f'{opçoes} {item}')
+        opçoes += 1
     print(linha())
     opc = LeiaInt('Sua opção: ')
     return opc 
 
 while True:
-    resposta = menu(['. cadastrar novo usuário', '. logar exibir perfil', '. alterar informações', '. Sair'])    
+    resposta = menu(['. cadastrar novo usuário', '. exibir perfil', '. Deletar Conta', '. Sair', '. Login'])    
     if resposta == 1:
         print('cadastrar novo usuário: \n')
-        usuario = input("Digite o nome do novo usuário: \n")
-        senha = input("Digite a nova senha: \n")
-        while len(senha) < 8:
-            print('Senha precisa ter pelo menos 8 caracteres.')
-            senha = input("Digite a nova senha: \n")
+        while True:
+            email = input("Digite seu email(apenas institucional): \n")
+            cursor.execute(
+                "SELECT email FROM librascode WHERE email = %s LIMIT 1",
+                (email,)
+            )
+            resultado = cursor.fetchone() 
+            if "@ufrpe.br" not in email:
+                print('email inválido, digite um email válido (com @ufrpe.br)')
+                sleep(2)
+                os.system('cls' if os.name == 'nt' else 'clear')
+            elif resultado is not None:
+                print("Este email ja esta cadastrado!!")
+                sleep(2)
+                os.system('cls' if os.name == 'nt' else 'clear')
 
-        cursor.execute(
-            "INSERT INTO librascode (usuario, senha) VALUES (%s, %s)",
-            (usuario, senha),
-        )
-        conexao.commit()
-        print('Usuário cadastrado com sucesso')
+            else:
+                break
+        while True:
+            senha = input("Digite a nova senha(min 8 caracteres/max 15 caracteres): \n") 
+            if len(senha) < 8:
+                print('senha precisa ter pelo menos 8 caracteres, digite novamente')
+                sleep(2)
+                os.system('cls' if os.name == 'nt' else 'clear')
+            elif len(senha) > 15:
+                print('A senha ultrapassar os 15 caracteres')
+            else:
+                break
+        while True:
+                usuario = input("Digite o nome do novo usuário(max 15 caracteres): \n")
+                cursor.execute(
+                     "SELECT usuario FROM librascode WHERE usuario = %s LIMIT 1",
+                     (usuario,)
+                )
+                resultado = cursor.fetchone()
+                if resultado is not None:
+                    print("Esse nome de usuário ja existe!!")
+                    sleep(2)
+                    os.system('cls' if os.name == 'nt' else 'clear')
+                elif len(usuario) > 15:
+                    print('nome de usuario maior que 15 caracteres')                     
+
+                else:
+                    comando = f'INSERT INTO librascode (usuario, senha, email) VALUES ("{usuario}", "{senha}", "{email}")'
+                    print('Usuário cadastrado com sucesso')
+                    cursor.execute(comando)
+                    conexao.commit()
+                    sleep(2)
+                    os.system('cls' if os.name == 'nt' else 'clear')
+                    break
+
+
     elif resposta == 2:
         for tentativa in range(3):
-            login = input("Digite seu login para ver se está cadastrado: ")
+            login = input("Digite seu login (seu email) para ver se está cadastrado: ")
             cursor.execute(
-                "SELECT usuario FROM librascode WHERE usuario = %s",
+                "SELECT usuario FROM librascode WHERE email = %s",
                 (login,),
             )
             resultado = cursor.fetchone()
 
-            if resultado:
-                print(f"Usuário cadastrado: {resultado[0]}")
+            if resultado is not None:
+                print(f"Usuário cadastrado: {resultado[0]} ")
+                sleep(2)
+                os.system('cls' if os.name == 'nt' else 'clear')
                 break
 
             print(f"Erro {tentativa + 1}/3: usuário não encontrado.")
+            sleep(2)
+            os.system('cls' if os.name == 'nt' else 'clear')
             if tentativa == 2:
                 print("Limite de tentativas atingido. Voltando ao menu principal.")
+                sleep(2)
+                os.system('cls' if os.name == 'nt' else 'clear')
     elif resposta == 3:
         for tentativa1 in range(3):
                     usuario = input("Digite o usuário que deseja deletar: ")
@@ -84,15 +131,28 @@ while True:
                         )
                         conexao.commit()
                         print('Usuário deletado com sucesso')
+                        sleep(1)
+                        os.system('cls' if os.name == 'nt' else 'clear')
                         break
         
                     print(f"Erro {tentativa1 + 1}/3: usuário não encontrado.")
                     if tentativa1 == 2:
                         print("Limite de tentativas atingido. Voltando ao menu principal.")
+                        sleep(2)
+                        os.system('cls' if os.name == 'nt' else 'clear')
                         
     elif resposta == 4:
         print('Saindo do Sistema... Até mais')
+        sleep(2)
+        os.system('cls' if os.name == 'nt' else 'clear')
         break
+
+
+    elif resposta == 5:
+        from login import fazer_login
+        sleep(2)
+        os.system('cls' if os.name == 'nt' else 'clear')
+
     else:
         print('\033[31mErro, opção inválida! Tente novamente.\033[m')
 
