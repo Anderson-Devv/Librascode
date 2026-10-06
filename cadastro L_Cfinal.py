@@ -1,4 +1,3 @@
-import mysql.connector
 from librascodebd import conexao_banco
 
 conexao = conexao_banco()
@@ -95,30 +94,8 @@ while True:
                     print(f"Erro {tentativa1 + 1}/3: usuário não encontrado.")
                     if tentativa1 == 2:
                         print("Limite de tentativas atingido. Voltando ao menu principal.")
+                        
     elif resposta == 4:
-        def fazer_login(email, senha):
-            try:
-                conexao = conexao_banco()
-                cursor = conexao.cursor()
-                login = "SELECT * FROM cadastrolibrascode WHERE email = %s AND senha = %s"
-                cursor.execute(login, (email, senha))
-                resultado = cursor.fetchone()
-        
-                if resultado:
-                    print("Login realizado com sucesso! Bem-vindo.")
-                    return True
-                else:
-                    print("Usuário ou senha incorretos.")
-                    return False
-            except mysql.connector.Error as erro:
-                print(f"Erro no login: {erro}")
-            finally:
-                if conexao.is_connected():
-                    cursor.close()
-                    conexao.close()
- 
-                            
-    elif resposta == 5:
         print('Saindo do Sistema... Até mais')
         break
     else:
