@@ -1,5 +1,5 @@
 from librascodebd import conexao_banco
-
+from login import fazer_login
 conexao = conexao_banco()
 cursor = conexao.cursor()
 
@@ -36,42 +36,32 @@ def menu(lista):
     return opc 
 
 while True:
-    resposta = menu(['. cadastrar novo usuário', '. exibir perfil', '. deletar usuário', '. login', '. Sair', ])    
+    resposta = menu(['. cadastrar novo usuário', '. login', '. deletar usuário', '. Sair', ])    
     if resposta == 1:
         print('cadastrar novo usuário: \n')
-        email = input("Digite seu email: \n")
-        while True: 
+
+        while True:
+            email = input("Digite seu email: \n") 
             if "@ufrpe.br" not in email:
                 print('email inválido, digite um email válido (com @ufrpe.br)')
+            else:
                 break
+        while True:
             senha = input("Digite a nova senha: \n")
-            while True: 
-                if len(senha) < 8:
-                    print('senha precisa ter pelo menos 8 caracteres')
-                    break
-                else:
-                    usuario = input("Digite o nome do novo usuário: \n")
-                    comando = f'INSERT INTO cadastrolibrascode (usuario, senha, email) VALUES ("{usuario}", "{senha}", "{email}")'
-                    print('Usuário cadastrado com sucesso')
-                    cursor.execute(comando)
-                    conexao.commit()
-                    break
-    elif resposta == 2:
-        for tentativa in range(3):
-            login = input("Digite seu login (seu email) para ver se está cadastrado: ")
-            cursor.execute(
-                "SELECT usuario FROM cadastrolibrascode WHERE email = %s",
-                (login,),
-            )
-            resultado = cursor.fetchone()
-
-            if resultado:
-                print(f"Usuário cadastrado: {resultado[0]}")
+            if len(senha) < 8:
+                print('senha precisa ter pelo menos 8 caracteres')
+            else:
+                usuario = input("Digite o nome do novo usuário: \n")
+                comando = f'INSERT INTO cadastrolibrascode (usuario, senha, email) VALUES ("{usuario}", "{senha}", "{email}")'
+                print('Usuário cadastrado com sucesso')
+                cursor.execute(comando)
+                conexao.commit()
                 break
-
-            print(f"Erro {tentativa + 1}/3: usuário não encontrado.")
-            if tentativa == 2:
-                print("Limite de tentativas atingido. Voltando ao menu principal.")
+    elif resposta == 2:
+        email = input("Digite seu email: \n")
+        senha = input("Digite sua senha: \n")
+        fazer_login(email, senha)
+        
     elif resposta == 3:
         for tentativa1 in range(3):
                     email_usuario = input("Digite o email do usuário que deseja deletar: \n")

@@ -1,11 +1,17 @@
+import mysql.connector
+
 from librascodebd import conexao_banco
 
 def fazer_login(email, senha):
+    conexao = None
+    cursor = None
     try:
         conexao = conexao_banco()
         cursor = conexao.cursor()
-        login = "SELECT * FROM cadastrolibrascode WHERE email = %s AND senha = %s"
-        cursor.execute(login, (email, senha))
+        cursor.execute(
+            "SELECT * FROM cadastrolibrascode WHERE email = %s AND senha = %s",
+            (email, senha),
+        )
         resultado = cursor.fetchone()
         
         if resultado:
@@ -14,9 +20,12 @@ def fazer_login(email, senha):
         else:
             print("Usuário ou senha incorretos.")
             return False
+        
     except mysql.connector.Error as erro:
         print(f"Erro no login: {erro}")
+        
     finally:
-        if conexao.is_connected():
+        if cursor is not None:
             cursor.close()
-            conexao.close()
+        if conexao is not None:
+            conexao.close() 
