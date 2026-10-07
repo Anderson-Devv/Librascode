@@ -53,15 +53,15 @@ while True:
             else:
                 break
         while True:
-                usuario = input("Digite o nome do novo usuário: (mínimo de 3 caracteres e máximo de 15)\n")
-                if len(usuario) < 3 or len(usuario) >15:
-                    print('Nome de usuário inválido, o nome deve ter pelo mens 3 caracteres e nó máximo 15.')
-                else:
-                    comando = f'INSERT INTO cadastrolibrascode (usuario, senha, email) VALUES ("{usuario}", "{senha}", "{email}")'
-                    print('Usuário cadastrado com sucesso')
-                    cursor.execute(comando)
-                    conexao.commit()
-                    break
+            usuario = input("Digite o nome do novo usuário: (mínimo de 3 caracteres e máximo de 15)\n")
+            if len(usuario) < 3 or len(usuario) >15:
+                print('Nome de usuário inválido, o nome deve ter pelo mens 3 caracteres e nó máximo 15.')
+            else:
+                comando = f'INSERT INTO cadastrolibrascode (usuario, senha, email) VALUES ("{usuario}", "{senha}", "{email}")'
+                print('Usuário cadastrado com sucesso')
+                cursor.execute(comando)
+                conexao.commit()
+                break
     elif resposta == 2:
         email = input("Digite seu email: \n")
         senha = input("Digite sua senha: \n")
@@ -69,26 +69,26 @@ while True:
         
     elif resposta == 3:
         for tentativa in range(3):
-                    email_usuario = input("Digite o email do usuário que deseja deletar: \n")
-                    senha_usuario = input("Digite a senha para confirmar exclusão: \n")
-                    cursor.execute(
-                        "SELECT 1 FROM cadastrolibrascode WHERE email = %s and senha = %s",
-                        (email_usuario, senha_usuario,),
-                    )
-                    resultado = cursor.fetchone()
+            email_usuario = input("Digite o email do usuário que deseja deletar: \n")
+            senha_usuario = input("Digite a senha para confirmar exclusão: \n")
+            cursor.execute(
+            "SELECT 1 FROM cadastrolibrascode WHERE email = %s and senha = %s",
+                (email_usuario, senha_usuario,),
+            )
+            resultado = cursor.fetchone()
+    
+            if resultado:
+                cursor.execute(
+                    "DELETE FROM cadastrolibrascode WHERE email = %s and senha = %s",
+                    (email_usuario, senha_usuario,),
+                )
+                conexao.commit()
+                print('Usuário deletado com sucesso')
+                break
         
-                    if resultado:
-                        cursor.execute(
-                            "DELETE FROM cadastrolibrascode WHERE email = %s and senha = %s",
-                            (email_usuario, senha_usuario,),
-                        )
-                        conexao.commit()
-                        print('Usuário deletado com sucesso')
-                        break
-        
-                    print(f"Erro {tentativa1 + 1}/3: usuário não encontrado.")
-                    if tentativa1 == 2:
-                        print("Limite de tentativas atingido. Voltando ao menu principal.")
+            print(f"Erro {tentativa + 1}/3: usuário não encontrado.")
+            if tentativa == 2:
+                print("Limite de tentativas atingido. Voltando ao menu principal.")
                         
     elif resposta == 4:
         print('Saindo do Sistema... Até mais')
