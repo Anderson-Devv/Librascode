@@ -1,7 +1,7 @@
 from librascodebd import conexao_banco
 from time import sleep
 import os
-
+from login import fazer_login
 conexao = conexao_banco()
 cursor = conexao.cursor()
 
@@ -38,7 +38,7 @@ def menu(lista):
     return opc 
 
 while True:
-    resposta = menu(['. cadastrar novo usuário', '. exibir perfil', '. Deletar Conta', '. Sair', '. Login'])    
+    resposta = menu(['. cadastrar novo usuário', '. login', '. deletar usuario', '. sair' ])    
     if resposta == 1:
         print('cadastrar novo usuário: \n')
         while True:
@@ -80,9 +80,15 @@ while True:
                     print("Esse nome de usuário ja existe!!")
                     sleep(2)
                     os.system('cls' if os.name == 'nt' else 'clear')
-                elif len(usuario) > 15:
-                    print('nome de usuario maior que 15 caracteres')                     
 
+                elif len(usuario) < 3:
+                    print('nome de usuario menor que 3 caracteres, tente novamente')
+                    sleep(2)
+                    os.system('cls' if os.name == 'nt' else 'clear')
+                elif len(usuario) > 15:
+                    print('nome de usuario maior que 15 caracteres, tente novamente')                     
+                    sleep(2)
+                    os.system('cls' if os.name == 'nt' else 'clear')
                 else:
                     comando = f'INSERT INTO librascode (usuario, senha, email) VALUES ("{usuario}", "{senha}", "{email}")'
                     print('Usuário cadastrado com sucesso')
@@ -91,67 +97,51 @@ while True:
                     sleep(2)
                     os.system('cls' if os.name == 'nt' else 'clear')
                     break
-
-
     elif resposta == 2:
-        for tentativa in range(3):
-            login = input("Digite seu login (seu email) para ver se está cadastrado: ")
-            cursor.execute(
-                "SELECT usuario FROM librascode WHERE email = %s",
-                (login,),
-            )
-            resultado = cursor.fetchone()
-
-            if resultado is not None:
-                print(f"Usuário cadastrado: {resultado[0]} ")
-                sleep(2)
-                os.system('cls' if os.name == 'nt' else 'clear')
-                break
-
-            print(f"Erro {tentativa + 1}/3: usuário não encontrado.")
-            sleep(2)
-            os.system('cls' if os.name == 'nt' else 'clear')
-            if tentativa == 2:
-                print("Limite de tentativas atingido. Voltando ao menu principal.")
-                sleep(2)
-                os.system('cls' if os.name == 'nt' else 'clear')
-    elif resposta == 3:
-        for tentativa1 in range(3):
-                    usuario = input("Digite o usuário que deseja deletar: ")
+        while True:
+            fazer_login()
+            if resposta == 1:
+                for tentativa1 in range(3):
+                    usuario = input("Digite o usuário que deseja alterar as informações: ")
                     cursor.execute(
                         "SELECT 1 FROM librascode WHERE usuario = %s",
                         (usuario,),
                     )
                     resultado = cursor.fetchone()
+
+                    if resultado is not None:
+                        print('O que você deseja alterar?')
+                        alterar = menu(['. Nome de usuário', '. Email', '. Senha'])
+                
+
+    elif resposta == 3:
+        for tentativa in range(3):
+            email_usuario = input("Digite o email do usuário que deseja deletar: \n")
+            senha_usuario = input("Digite a senha para confirmar exclusão: \n")
+            cursor.execute(
+            "SELECT 1 FROM librascode WHERE email = %s and senha = %s",
+                (email_usuario, senha_usuario,),
+            )
+            resultado = cursor.fetchone()
+    
+            if resultado:
+                cursor.execute(
+                    "DELETE FROM librascode WHERE email = %s and senha = %s",
+                    (email_usuario, senha_usuario,),
+                )
+                conexao.commit()
+                print('Usuário deletado com sucesso')
+                break
         
-                    if resultado:
-                        cursor.execute(
-                            "DELETE FROM librascode WHERE usuario = %s",
-                            (usuario,),
-                        )
-                        conexao.commit()
-                        print('Usuário deletado com sucesso')
-                        sleep(1)
-                        os.system('cls' if os.name == 'nt' else 'clear')
-                        break
-        
-                    print(f"Erro {tentativa1 + 1}/3: usuário não encontrado.")
-                    if tentativa1 == 2:
-                        print("Limite de tentativas atingido. Voltando ao menu principal.")
-                        sleep(2)
-                        os.system('cls' if os.name == 'nt' else 'clear')
+            print(f"Erro {tentativa + 1}/3: usuário não encontrado.")
+            if tentativa == 2:
+                print("Limite de tentativas atingido. Voltando ao menu principal.")
                         
     elif resposta == 4:
         print('Saindo do Sistema... Até mais')
         sleep(2)
         os.system('cls' if os.name == 'nt' else 'clear')
         break
-
-
-    elif resposta == 5:
-        from login import fazer_login
-        sleep(2)
-        os.system('cls' if os.name == 'nt' else 'clear')
 
     else:
         print('\033[31mErro, opção inválida! Tente novamente.\033[m')

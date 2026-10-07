@@ -1,4 +1,5 @@
 from librascodebd import conexao_banco
+import mysql.connector
 
 def fazer_login():
     try:
@@ -13,6 +14,7 @@ def fazer_login():
         if resultado:
             print("Login realizado com sucesso! Bem-vindo.")
             return True
+            resposta = menu(['. alterar informações', '. Deletar conta'])
         else:
             print("Usuário ou senha incorretos.")
             return False
@@ -22,4 +24,3 @@ def fazer_login():
         if conexao.is_connected():
             cursor.close()
             conexao.close()
-fazer_login()
