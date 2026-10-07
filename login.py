@@ -15,10 +15,10 @@ def fazer_login(email, senha):
         resultado = cursor.fetchone()
         
         if resultado:
-            print("Login realizado com sucesso! Bem-vindo.")
+            print("\nLogin realizado com sucesso! Bem-vindo.\n")
             return True
         else:
-            print("Usuário ou senha incorretos.")
+            print("\nUsuário ou senha incorretos.\n")
             return False
         
     except mysql.connector.Error as erro:

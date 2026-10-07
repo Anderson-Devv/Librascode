@@ -48,22 +48,27 @@ while True:
                 break
         while True:
             senha = input("Digite a nova senha: \n")
-            if len(senha) < 8:
-                print('senha precisa ter pelo menos 8 caracteres')
+            if len(senha) < 8 or len(senha) > 15:
+                print('senha precisa ter pelo menos 8 caracteres e menos de 15 caracteres')
             else:
-                usuario = input("Digite o nome do novo usuário: \n")
-                comando = f'INSERT INTO cadastrolibrascode (usuario, senha, email) VALUES ("{usuario}", "{senha}", "{email}")'
-                print('Usuário cadastrado com sucesso')
-                cursor.execute(comando)
-                conexao.commit()
                 break
+        while True:
+                usuario = input("Digite o nome do novo usuário: (mínimo de 3 caracteres e máximo de 15)\n")
+                if len(usuario) < 3 or len(usuario) >15:
+                    print('Nome de usuário inválido, o nome deve ter pelo mens 3 caracteres e nó máximo 15.')
+                else:
+                    comando = f'INSERT INTO cadastrolibrascode (usuario, senha, email) VALUES ("{usuario}", "{senha}", "{email}")'
+                    print('Usuário cadastrado com sucesso')
+                    cursor.execute(comando)
+                    conexao.commit()
+                    break
     elif resposta == 2:
         email = input("Digite seu email: \n")
         senha = input("Digite sua senha: \n")
         fazer_login(email, senha)
         
     elif resposta == 3:
-        for tentativa1 in range(3):
+        for tentativa in range(3):
                     email_usuario = input("Digite o email do usuário que deseja deletar: \n")
                     senha_usuario = input("Digite a senha para confirmar exclusão: \n")
                     cursor.execute(
