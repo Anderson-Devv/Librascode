@@ -9,7 +9,7 @@ def fazer_login(email, senha):
         conexao = conexao_banco()
         cursor = conexao.cursor()
         cursor.execute(
-            "SELECT * FROM librascode WHERE email = %s AND senha = %s",
+            "SELECT * FROM cadastrolibrascode WHERE email = %s AND senha = %s",
             (email, senha),
         )
         resultado = cursor.fetchone()
@@ -21,8 +21,8 @@ def fazer_login(email, senha):
             print("\nUsuário ou senha incorretos.\n")
             return False
         
-    # except mysql.connector.Error as erro:
-    #     print(f"Erro no login: {erro}")
+    except mysql.connector.Error as erro:
+        print(f"Erro no login: {erro}")
         
     finally:
         if cursor is not None:

@@ -58,7 +58,7 @@ while True:
             if len(usuario) < 3 or len(usuario) >15:
                 print('Nome de usuário inválido, o nome deve ter pelo mens 3 caracteres e nó máximo 15.')
             else:
-                comando = f'INSERT INTO librascode (usuario, senha, email) VALUES ("{usuario}", "{senha}", "{email}")'
+                comando = f'INSERT INTO cadastrolibrascode (usuario, senha, email) VALUES ("{usuario}", "{senha}", "{email}")'
                 print('Usuário cadastrado com sucesso')
                 cursor.execute(comando)
                 conexao.commit()
@@ -72,11 +72,11 @@ while True:
             print("Abrindo menu de Login...")
             def menu_login():
                 while True:
-                    resposta = menu(['. Alterar senha', 'Alterar email', '. Deletar conta', '. Sair'])
+                    resposta = menu(['. Alterar senha', '. Alterar email', '. Deletar conta', '. Sair'])
                     if resposta == 1:
                         nova_senha = input('Digite a nova senha: \n')
                         cursor.execute(
-                            "UPDATE librascode SET senha = %s WHERE email = %s",
+                            "UPDATE cadastrolibrascode SET senha = %s WHERE email = %s",
                             (nova_senha, email),               
                         )
                         conexao.commit()
@@ -85,17 +85,17 @@ while True:
                     elif resposta == 2:
                         novo_email = input("Digite novo email: n")
                         cursor.execute(
-                        "UPDATE librascode SET email = %s WHERE email = %s",
+                        "UPDATE cadastrolibrascode SET email = %s WHERE email = %s",
                         (novo_email, email),
                         )
                         conexao.commit()
                         print("Email alterado com sucesso.")
                         return menu_login()
                     elif resposta == 3:
-                        escolha = input("Deseja deletar sua conta S ou N?")
+                        escolha = input("Deseja deletar sua conta S ou N?\n").upper()
                         if escolha == "S":
                             cursor.execute(
-                                "DELETE FROM librascode WHERE email = %s",
+                                "DELETE FROM cadastrolibrascode WHERE email = %s",
                                 (email,),
                             )
                             conexao.commit()
@@ -114,7 +114,7 @@ while True:
                         return
             menu_login()
                         
-        if resultado == False:
+        elif resultado == False:
             print("Você precisa estar logado para acessar o menu de login.")
             break
                             
