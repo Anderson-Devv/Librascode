@@ -100,27 +100,30 @@ while True:
     elif resposta == 2:
         while True:
             fazer_login()
+            resposta = menu(['. alterar informações', '. Deletar conta'])
             if resposta == 1:
                 for tentativa1 in range(3):
                     usuario = input("Digite o usuário que deseja alterar as informações: ")
                     cursor.execute(
-                        "SELECT 1 FROM librascode WHERE usuario = %s",
+                        "SELECT * FROM librascode WHERE usuario = %s",
                         (usuario,),
                     )
                     resultado = cursor.fetchone()
-
-                    if resultado is not None:
-                        print('O que você deseja alterar?')
-                        alterar = menu(['. Nome de usuário', '. Email', '. Senha'])
-                
-
+                    print('O que você deseja alterar?')
+                    alterar = menu(['. Nome de usuário', '. Email', '. Senha'])
+                    if alterar == 1:
+                        novo_usuario = input('digite o seu novo nome de usuário')
+                        cursor.execute("UPDATE librascode SET usuario = %s WHERE usuario = %s",
+                                       (novo_usuario, usuario)
+                                       )
+                        break
     elif resposta == 3:
         for tentativa in range(3):
             email_usuario = input("Digite o email do usuário que deseja deletar: \n")
             senha_usuario = input("Digite a senha para confirmar exclusão: \n")
             cursor.execute(
             "SELECT 1 FROM librascode WHERE email = %s and senha = %s",
-                (email_usuario, senha_usuario,),
+                (email_usuario, senha_usuario)
             )
             resultado = cursor.fetchone()
     
