@@ -36,7 +36,7 @@ def menu(lista):
     return opc 
 
 while True:
-    resposta = menu(['. cadastrar novo usuário', '. login', '. deletar usuário', '. Sair', ])    
+    resposta = menu(['. cadastrar novo usuário', '. login', '. Sair', ])    
     if resposta == 1:
         print('cadastrar novo usuário: \n')
 
@@ -44,6 +44,7 @@ while True:
             email = input("Digite seu email: \n") 
             if "@ufrpe.br" not in email:
                 print('email inválido, digite um email válido (com @ufrpe.br)')
+                
             else:
                 break
         while True:
@@ -62,35 +63,62 @@ while True:
                 cursor.execute(comando)
                 conexao.commit()
                 break
+            
     elif resposta == 2:
         email = input("Digite seu email: \n")
         senha = input("Digite sua senha: \n")
-        fazer_login(email, senha)
-        
-    elif resposta == 3:
-        for tentativa in range(3):
-            email_usuario = input("Digite o email do usuário que deseja deletar: \n")
-            senha_usuario = input("Digite a senha para confirmar exclusão: \n")
-            cursor.execute(
-            "SELECT 1 FROM cadastrolibrascode WHERE email = %s and senha = %s",
-                (email_usuario, senha_usuario,),
-            )
-            resultado = cursor.fetchone()
-    
-            if resultado:
-                cursor.execute(
-                    "DELETE FROM cadastrolibrascode WHERE email = %s and senha = %s",
-                    (email_usuario, senha_usuario,),
-                )
-                conexao.commit()
-                print('Usuário deletado com sucesso')
-                break
-        
-            print(f"Erro {tentativa + 1}/3: usuário não encontrado.")
-            if tentativa == 2:
-                print("Limite de tentativas atingido. Voltando ao menu principal.")
+        resultado = fazer_login(email, senha)
+        if resultado == True:
+            print("Abrindo menu de Login...")
+            def menu_login():
+                while True:
+                    resposta = menu(['. Alterar senha', 'Alterar email', '. Deletar conta', '. Sair'])
+                    if resposta == 1:
+                        nova_senha = input('Digite a nova senha: \n')
+                        cursor.execute(
+                            "UPDATE cadastrolibrascode SET senha = %s WHERE email = %s",
+                            (nova_senha, email),               
+                        )
+                        conexao.commit()
+                        print("Senha alterada com sucesso.")
+                        return menu_login()
+                    elif resposta == 2:
+                        novo_email = input("Digite novo email: n")
+                        cursor.execute(
+                        "UPDATE cadastrolibrascode SET email = %s WHERE email = %s",
+                        (novo_email, email),
+                        )
+                        conexao.commit()
+                        print("Email alterado com sucesso.")
+                        return menu_login()
+                    elif resposta == 3:
+                        escolha = input("Deseja deletar sua conta S ou N?")
+                        if escolha == "S":
+                            cursor.execute(
+                                "DELETE FROM cadastrolibrascode WHERE email = %s",
+                                (email,),
+                            )
+                            conexao.commit()
+                            print("Conta deletada com sucesso")
+                            return menu_login()
+                        if escolha == "N":
+                            print("Deleção cancelada")
+                        else:
+                            print("Opção inválida\n")
+                            return menu_login()
+                    elif resposta == 4:
+                        print("Voltando ao menu principal")
+                        break
+                    else:
+                        print("Opção inválida, tente uma opção válida da próxima vez.")
+                        return
+            menu_login()
                         
-    elif resposta == 4:
+        if resultado == False:
+            print("Você precisa estar logado para acessar o menu de login.")
+            break
+                            
+    elif resposta == 3:
         print('Saindo do Sistema... Até mais')
         break
     else:
