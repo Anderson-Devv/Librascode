@@ -58,7 +58,7 @@ while True:
             if len(usuario) < 3 or len(usuario) >15:
                 print('Nome de usuário inválido, o nome deve ter pelo mens 3 caracteres e nó máximo 15.')
             else:
-                comando = f'INSERT INTO cadastrolibrascode (usuario, senha, email) VALUES ("{usuario}", "{senha}", "{email}")'
+                comando = f'INSERT INTO librascode (usuario, senha, email) VALUES ("{usuario}", "{senha}", "{email}")'
                 print('Usuário cadastrado com sucesso')
                 cursor.execute(comando)
                 conexao.commit()
@@ -76,7 +76,7 @@ while True:
                     if resposta == 1:
                         nova_senha = input('Digite a nova senha: \n')
                         cursor.execute(
-                            "UPDATE cadastrolibrascode SET senha = %s WHERE email = %s",
+                            "UPDATE librascode SET senha = %s WHERE email = %s",
                             (nova_senha, email),               
                         )
                         conexao.commit()
@@ -85,7 +85,7 @@ while True:
                     elif resposta == 2:
                         novo_email = input("Digite novo email: n")
                         cursor.execute(
-                        "UPDATE cadastrolibrascode SET email = %s WHERE email = %s",
+                        "UPDATE librascode SET email = %s WHERE email = %s",
                         (novo_email, email),
                         )
                         conexao.commit()
@@ -95,7 +95,7 @@ while True:
                         escolha = input("Deseja deletar sua conta S ou N?")
                         if escolha == "S":
                             cursor.execute(
-                                "DELETE FROM cadastrolibrascode WHERE email = %s",
+                                "DELETE FROM librascode WHERE email = %s",
                                 (email,),
                             )
                             conexao.commit()
