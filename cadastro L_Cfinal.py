@@ -56,7 +56,7 @@ while True:
         while True:
             usuario = input("Digite o nome do novo usuário: (mínimo de 3 caracteres e máximo de 15)\n")
             if len(usuario) < 3 or len(usuario) >15:
-                print('Nome de usuário inválido, o nome deve ter pelo mens 3 caracteres e nó máximo 15.')
+                print('Nome de usuário inválido, o nome deve ter pelo menos 3 caracteres e nó máximo 15.')
             else:
                 comando = f'INSERT INTO cadastrolibrascode (usuario, senha, email) VALUES ("{usuario}", "{senha}", "{email}")'
                 print('Usuário cadastrado com sucesso')
