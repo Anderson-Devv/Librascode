@@ -9,12 +9,12 @@ a linguagem de sinais brasileira, e assim, podermos promover uma inclusão efica
 
 ## 🚀 Release 1.0
 
-| Funcionalidade                     | Descrição                                                                 |
-| ---------------------------------- | ------------------------------------------------------------------------- |
-| Cadastro de usuários               | Permite que novos usuários criem uma conta no sistema.                    |
-| Login                              | Permite que o usuário entre no sistema utilizando seus dados cadastrados. |
-| Lições de Libras                   | (Preencher)                                                               |
-| Interface Gráfica                  | (Preencher)                                                               |
-| Sistema de Rank por Pontuação      | (Preencher)                                                               |
-
-
+| Funcionalidade                     | Descrição                                                                                                                                |
+| ---------------------------------- | -----------------------------------------------------------------------------------------------------------------------------------------|
+| Cadastro de usuários               | Permite que novos usuários criem uma conta no sistema.                                                                                   |
+| Login                              | Permite que o usuário entre no sistema utilizando seus dados cadastrados.                                                                |
+| Atualizar informações              | Permite usuário alterar suas informações                                                                                                 |
+| Deleção de conta                   | Permite usuário deletar sua conta                                                                                                        |
+| Lições de Libras                   | Dispõe questões para o usuário responder e entender palavras em libras.                                                                  |
+| Interface Gráfica                  | Interface interativa com opções de cadastro e login                                                                                      |
+| Menu                               | Sistema que apresenta ao usuário as funcionalidades disponíveis para ele usufruir                                                        |
