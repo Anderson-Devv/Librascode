@@ -31,3 +31,21 @@ a linguagem de sinais brasileira, e assim, podermos promover uma inclusão efica
 
 FRAMEWORK: Flask
 O Flask foi utilizado para desenvolver a API responsável pela comunicação entre a interface gráfica e o banco de dados. Ele permite consultar módulos e lições, registrar respostas, calcular pontuações, consultar o ranking e disponibilizar as mídias utilizadas nas atividades, retornando os dados para a interface em formato JSON
+
+Instalação e Execução:
+Antes de executar o LibrasCode, é necessário ter instalado:
+- Python 3.
+- MySQL Server
+  
+Clone o repositório:
+git clone https://github.com/Anderson-Devv/Librascode
+cd Librascode
+
+Instale as Dependências:
+- pip install customtkinter pillow mysql-connector requests flask
+  
+Execute o jogo:
+pythonmain.py
+
+## Fluxogramas:
+Link a ser adicionado...
