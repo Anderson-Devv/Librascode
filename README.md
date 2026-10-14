@@ -19,8 +19,8 @@ a linguagem de sinais brasileira, e assim, podermos promover uma inclusão efica
 | Interface Gráfica                  | Interface interativa com opções de cadastro e login                                                                                      |
 | Menu                               | Sistema que apresenta ao usuário as funcionalidades disponíveis para ele usufruir                                                        |
 
-Bibliotecas utilizadas no projeto
 
+## 📚 Bibliotecas utilizadas no projeto
 
 | Biblioteca                         | Para que é utilizada                                                                                                                     |
 | ---------------------------------- | -----------------------------------------------------------------------------------------------------------------------------------------|
