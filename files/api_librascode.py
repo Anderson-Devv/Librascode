@@ -1,7 +1,7 @@
 """
-API do LibrasCode (Flask).
+API do cadastrolibrascode (Flask).
 
-Rodar:  python api_librascode.py   (deixe rodando em um terminal)
+Rodar:  python api_cadastrolibrascode.py   (deixe rodando em um terminal)
 Depende de: pip install flask mysql-connector-python
 
 Rotas:
@@ -125,7 +125,7 @@ def responder():
         return erro("Sinal não encontrado.", 404)
 
     usuario = consultar(
-        "SELECT idlibrascode FROM librascode WHERE idlibrascode = %s",
+        "SELECT idcadastrolibrascode FROM cadastrolibrascode WHERE idcadastrolibrascode = %s",
         (usuario_id,),
         um=True,
     )
@@ -150,9 +150,9 @@ def ranking():
                COALESCE(SUM(r.pontos), 0)  AS pontos,
                COALESCE(SUM(r.acertou), 0) AS acertos,
                COUNT(r.id)                 AS respondidas
-        FROM librascode c
-        LEFT JOIN respostas r ON r.usuario_id = c.idlibrascode
-        GROUP BY c.idlibrascode, c.usuario
+        FROM cadastrolibrascode c
+        LEFT JOIN respostas r ON r.usuario_id = c.idcadastrolibrascode
+        GROUP BY c.idcadastrolibrascode, c.usuario
         ORDER BY pontos DESC, acertos DESC, c.usuario
         LIMIT 10
         """

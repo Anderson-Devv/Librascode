@@ -23,21 +23,21 @@ cursor = conexao.cursor()
 
 janela_inicial = ctk.CTk()
 janela_inicial.title("LibrasCode")
-janela_inicial.geometry("1200x800")
+janela_inicial.geometry("1920x1080")
 
 
 
 
 imagem_login = ctk.CTkImage(
-        light_image=Image.open("./midia./500x400.jpeg"),
-        dark_image=Image.open("./midia./500x400.jpeg"),
+        light_image=Image.open("./500x400.jpeg"),
+        dark_image=Image.open("./500x400.jpeg"),
         size=(500, 400)
     )
 
 try:
     img = ctk.CTkImage(
-        light_image=Image.open("./midia./cartão librascode.jpeg"),
-        dark_image=Image.open("./midia./cartão librascode.jpeg"),
+        light_image=Image.open("./cartão librascode.jpeg"),
+        dark_image=Image.open("./cartão librascode.jpeg"),
         size=(1920, 1080)
     )
 
@@ -138,7 +138,7 @@ def abrir_cadastro():
 
             cursor.execute(
                 """
-                INSERT INTO librascode
+                INSERT INTO cadastrolibrascode
                 (usuario, senha, email)
                 VALUES (%s,%s,%s)
                 """,
@@ -207,7 +207,7 @@ def abrir_menu_usuario(email, usuario_id):
 
         cursor.execute(
             """
-            UPDATE librascode
+            UPDATE cadastrolibrascode
             SET senha=%s
             WHERE email=%s
             """,
@@ -236,7 +236,7 @@ def abrir_menu_usuario(email, usuario_id):
 
         cursor.execute(
             """
-            UPDATE librascode
+            UPDATE cadastrolibrascode
             SET email=%s
             WHERE email=%s
             """,
@@ -262,7 +262,7 @@ def abrir_menu_usuario(email, usuario_id):
 
             cursor.execute(
                 """
-                DELETE FROM librascode
+                DELETE FROM cadastrolibrascode
                 WHERE email=%s
                 """,
                 (email,)

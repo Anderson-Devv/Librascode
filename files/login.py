@@ -9,11 +9,11 @@ def fazer_login(email, senha):
         conexao = conexao_banco()
         cursor = conexao.cursor()
         cursor.execute(
-            "SELECT idlibrascode FROM librascode WHERE email = %s AND senha = %s",
+            "SELECT idcadastrolibrascode FROM cadastrolibrascode WHERE email = %s AND senha = %s",
             (email, senha),
         )
         resultado = cursor.fetchone()
-        
+
         if resultado:
             print("\nLogin realizado com sucesso! Bem-vindo.\n")
             return resultado[0]
