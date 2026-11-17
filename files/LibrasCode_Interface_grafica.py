@@ -23,7 +23,7 @@ cursor = conexao.cursor()
 
 janela_inicial = ctk.CTk()
 janela_inicial.title("LibrasCode")
-janela_inicial.geometry("1920x1080")
+janela_inicial.geometry("1200x1000")
 
 
 
@@ -70,7 +70,7 @@ def abrir_cadastro():
 
     janela = ctk.CTkToplevel(janela_inicial)
     janela.title("Cadastro")
-    janela.geometry("1920x1080")
+    janela.geometry("1200x1000")
     label_fundo = ctk.CTkLabel(
         janela,
         text="",
