@@ -23,14 +23,11 @@ cursor = conexao.cursor()
 
 janela_inicial = ctk.CTk()
 janela_inicial.title("LibrasCode")
-janela_inicial.geometry("1920x1080")
-
-
-
+janela_inicial.geometry("1200x800")
 
 imagem_login = ctk.CTkImage(
-        light_image=Image.open("./500x400.jpeg"),
-        dark_image=Image.open("./500x400.jpeg"),
+        light_image=Image.open("./midia/500x400.jpeg"),
+        dark_image=Image.open("./midia/500x400.jpeg"),
         size=(500, 400)
     )
 
@@ -138,7 +135,7 @@ def abrir_cadastro():
 
             cursor.execute(
                 """
-                INSERT INTO cadastrolibrascode
+                INSERT INTO librascode
                 (usuario, senha, email)
                 VALUES (%s,%s,%s)
                 """,
@@ -207,7 +204,7 @@ def abrir_menu_usuario(email, usuario_id):
 
         cursor.execute(
             """
-            UPDATE cadastrolibrascode
+            UPDATE librascode
             SET senha=%s
             WHERE email=%s
             """,
@@ -236,7 +233,7 @@ def abrir_menu_usuario(email, usuario_id):
 
         cursor.execute(
             """
-            UPDATE cadastrolibrascode
+            UPDATE librascode
             SET email=%s
             WHERE email=%s
             """,
@@ -262,7 +259,7 @@ def abrir_menu_usuario(email, usuario_id):
 
             cursor.execute(
                 """
-                DELETE FROM cadastrolibrascode
+                DELETE FROM librascode
                 WHERE email=%s
                 """,
                 (email,)
