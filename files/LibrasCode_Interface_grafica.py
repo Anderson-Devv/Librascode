@@ -29,8 +29,13 @@ janela_inicial.geometry("1200x800")
 
 
 imagem_login = ctk.CTkImage(
+<<<<<<< teste_ander
         light_image=Image.open("./midia./500x400.jpeg"),
         dark_image=Image.open("./midia./500x400.jpeg"),
+=======
+        light_image=Image.open("./500x400.jpeg"),
+        dark_image=Image.open("./500x400.jpeg"),
+>>>>>>> local
         size=(500, 400)
     )
 
@@ -427,4 +432,5 @@ ctk.CTkButton(
     command=janela_inicial.destroy
 ).pack(pady=15)
 
-janela_inicial.mainloop()
+if __name__ == "__main__":
+    janela_inicial.mainloop()
