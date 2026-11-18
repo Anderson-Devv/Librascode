@@ -1,5 +1,5 @@
 """
-API do cadastrolibrascode (Flask).
+Framework do cadastrolibrascode (Flask).
 
 Rodar:  python api_cadastrolibrascode.py   (deixe rodando em um terminal)
 Depende de: pip install flask mysql-connector-python
@@ -142,60 +142,6 @@ def responder():
     return jsonify({"acertou": acertou, "correta": sinal["palavra"], "pontos": pontos})
 
 
-@app.get("/ranking")
-def ranking():
-    linhas = consultar(
-        """
-        SELECT c.usuario,
-               COALESCE(SUM(r.pontos), 0)  AS pontos,
-               COALESCE(SUM(r.acertou), 0) AS acertos,
-               COUNT(r.id)                 AS respondidas
-        FROM cadastrolibrascode c
-        LEFT JOIN respostas r ON r.usuario_id = c.idcadastrolibrascode
-        GROUP BY c.idcadastrolibrascode, c.usuario
-        ORDER BY pontos DESC, acertos DESC, c.usuario
-        LIMIT 10
-        """
-    )
-    # o MySQL devolve SUM como Decimal; converte para int para virar JSON
-    for linha in linhas:
-        linha["pontos"] = int(linha["pontos"])
-        linha["acertos"] = int(linha["acertos"])
-    return jsonify(linhas)
-
-
-@app.get("/usuarios/<int:usuario_id>/pontuacao")
-def pontuacao_usuario(usuario_id):
-    total = consultar(
-        """
-        SELECT COALESCE(SUM(pontos), 0)  AS pontos,
-               COALESCE(SUM(acertou), 0) AS acertos,
-               COUNT(id)                 AS respondidas
-        FROM respostas WHERE usuario_id = %s
-        """,
-        (usuario_id,),
-        um=True,
-    )
-    por_modulo = consultar(
-        """
-        SELECT m.nome AS modulo,
-               COALESCE(SUM(r.pontos), 0)  AS pontos,
-               COALESCE(SUM(r.acertou), 0) AS acertos,
-               COUNT(r.id)                 AS respondidas
-        FROM modulos m
-        JOIN sinais s ON s.modulo_id = m.id
-        LEFT JOIN respostas r ON r.sinal_id = s.id AND r.usuario_id = %s
-        GROUP BY m.id, m.nome, m.ordem
-        ORDER BY m.ordem
-        """,
-        (usuario_id,),
-    )
-    for linha in [total] + por_modulo:
-        for chave in ("pontos", "acertos", "respondidas"):
-            linha[chave] = int(linha[chave])
-    return jsonify({"total": total, "por_modulo": por_modulo})
-
-
 # ---------- conteúdo (cadastro de sinais) e mídia ----------
 
 @app.post("/sinais")
@@ -222,6 +168,11 @@ def servir_midia(arquivo):
     return send_from_directory(PASTA_MIDIA, arquivo)
 
 
-if __name__ == "__main__":
+def iniciar_api():
     os.makedirs(PASTA_MIDIA, exist_ok=True)
-    app.run(host="127.0.0.1", port=5000, debug=True)
+    # debug e reloader desligados: eles não funcionam fora da thread principal
+    app.run(host="127.0.0.1", port=5000, debug=False, use_reloader=False)
+
+
+if __name__ == "__main__":
+    iniciar_api()
