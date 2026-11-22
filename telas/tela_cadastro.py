@@ -2,8 +2,6 @@
 import customtkinter as ctk
 
 from conta.gerenciamento_conta import Conta
-from tkinter import messagebox
-
 
 class TelaCadastro(ctk.CTkFrame):
 
@@ -59,7 +57,6 @@ class TelaCadastro(ctk.CTkFrame):
         self.campo_senha = ctk.CTkEntry(
             self,
             width=300,
-            show="*"
         )
         self.campo_senha.pack()
 
@@ -72,7 +69,6 @@ class TelaCadastro(ctk.CTkFrame):
         self.campo_conf_senha = ctk.CTkEntry(
             self,
             width=300,
-            show="*"
         )
         self.campo_conf_senha.pack()
 
@@ -108,5 +104,40 @@ class TelaCadastro(ctk.CTkFrame):
 
         resultado = conta.cadastrar()
 
-        if resultado:
+        if resultado == "email_existente":
+            self.label_mensagem.configure(
+                text="Esse email já está sendo usado!",
+                text_color="red"
+            )
+            self.label_mensagem.pack(pady=5)
+
+        elif resultado == "usuario_invalido":
+            self.label_mensagem.configure(
+                text="Usuário deve ter entre 3 e 15 caracteres.",
+                text_color="red"
+            )
+            self.label_mensagem.pack(pady=5)
+
+        elif resultado == "email_invalido":
+            self.label_mensagem.configure(
+                text="O email deve conter @ufrpe.br",
+                text_color="red"
+            )
+            self.label_mensagem.pack(pady=5)
+
+        elif resultado == "senha_invalida":
+            self.label_mensagem.configure(
+                text="A senha deve ter entre 8 e 15 caracteres.",
+                text_color="red"
+            )
+            self.label_mensagem.pack(pady=5)
+
+        elif resultado is True:
             self.controlador.mostrar_tela("login")
+            
+        else:
+            self.label_mensagem.configure(
+                text="Erro ao realizar cadastro.",
+                text_color="red"
+            )
+            self.label_mensagem.pack(pady=5)

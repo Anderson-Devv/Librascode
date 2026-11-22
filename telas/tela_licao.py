@@ -94,48 +94,6 @@ class TelaLicao(ctk.CTkFrame):
             command=lambda: self.controlador.mostrar_tela("menu")
         ).pack(pady=20)
 
-    def configurar_licao(self, usuario_id, modulo_id):
-
-        self.usuario_id = usuario_id
-        self.modulo_id = modulo_id
-
-        self.preparar_nova_licao()
-
-        self.label_titulo.configure(text="")
-        self.label_enunciado.configure(text="")
-        self.label_feedback.configure(text="")
-        self.botao_proximo.pack_forget()
-
-        dados = self.api.chamar(
-            "GET",
-            f"/modulos/{modulo_id}/licao",
-            params={"qtd": 5}
-        )
-
-        if dados is None:
-            return
-
-        self.questoes = dados["questoes"]
-
-        if not self.questoes:
-            self.label_enunciado.configure(
-                text="Não existem questões neste módulo."
-            )
-            return
-
-        self.estado = {
-            "indice": 0,
-            "acertos": 0,
-            "pontos": 0,
-            "frames": [],
-            "quadro": 0,
-            "job": None,
-            "botoes": []
-        }
-
-        self.mostrar_questao()
-
-
     def parar_animacao(self):
 
         if not hasattr(self, "estado"):
@@ -282,6 +240,43 @@ class TelaLicao(ctk.CTkFrame):
             self.finalizar()
         else:
             self.mostrar_questao()
+
+    def finalizar(self):
+
+        self.parar_animacao()
+
+        self.label_titulo.pack_forget()
+        self.label_enunciado.pack_forget()
+        self.label_midia.pack_forget()
+        self.frame_opcoes.pack_forget()
+        self.label_feedback.pack_forget()
+        self.botao_proximo.pack_forget()
+
+        total = len(self.questoes)
+        acertos = self.estado["acertos"]
+        pontos = self.estado["pontos"]
+
+        porcentagem = (acertos / total) * 100
+
+        self.label_resultado.configure(
+            text="Lição concluída!"
+        )
+
+        self.label_estatisticas.configure(
+            text=(
+                f"Acertos: {acertos}/{total}\n"
+                f"Aproveitamento: {porcentagem:.1f}%\n"
+                f"Pontuação: {pontos} pontos"
+            )
+        )
+
+        self.frame_resultado.pack(
+            expand=True,
+            fill="both",
+            padx=20,
+            pady=20
+        )
+    
 
     def configurar_licao(self, usuario_id, modulo_id):
 

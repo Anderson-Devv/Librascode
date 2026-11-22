@@ -77,11 +77,6 @@ class TelaLogin(ctk.CTkFrame):
         resultado = self.conta.fazer_login()
 
         if resultado:
-            self.label_mensagem.configure(
-                text="Login realizado com sucesso!",
-                text_color="green"
-            )
-            self.label_mensagem.pack(pady = 5)
 
             menu = self.controlador.telas["menu"]
             menu.configurar_usuario(email, resultado, self.conta)
