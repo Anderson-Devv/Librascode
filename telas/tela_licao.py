@@ -3,6 +3,7 @@ from PIL import Image
 
 from telas.licoes.api_cliente import APICliente
 from telas.licoes.midia import GerenciadorMidia
+from telas.gerenciador_fundos import GerenciadorFundos
 class TelaLicao(ctk.CTkFrame):
 
     def __init__(self, master, controlador):
@@ -30,6 +31,12 @@ class TelaLicao(ctk.CTkFrame):
         self.bind("<Destroy>", self.ao_destruir)
 
     def criar_componentes(self):
+
+        self.imagem_fundo = GerenciadorFundos.aplicar(
+            self,
+            "500x400.jpeg"
+        )
+
 
         self.label_titulo = ctk.CTkLabel(
             self,
@@ -69,31 +76,26 @@ class TelaLicao(ctk.CTkFrame):
             command=self.proxima
         )
 
-        self.frame_resultado = ctk.CTkFrame(self)
-
         self.label_resultado = ctk.CTkLabel(
-            self.frame_resultado,
+            self,
             text="Lição concluída!",
-            font=("Arial", 30, "bold")
+            font=("Arial", 30, "bold"),
+            fg_color="transparent"
         )
-
-        self.label_resultado.pack(pady=40)
 
         self.label_estatisticas = ctk.CTkLabel(
-            self.frame_resultado,
+            self,
             text="",
-            font=("Arial", 22)
+            font=("Arial", 22),
+            fg_color="transparent"
         )
 
-        self.label_estatisticas.pack(pady=20)
-
-        ctk.CTkButton(
-            self.frame_resultado,
+        self.botao_voltar = ctk.CTkButton(
+            self,
             text="Voltar ao menu",
             width=200,
             command=lambda: self.controlador.mostrar_tela("menu")
-        ).pack(pady=20)
-
+        )
     def parar_animacao(self):
 
         if not hasattr(self, "estado"):
@@ -198,7 +200,6 @@ class TelaLicao(ctk.CTkFrame):
         )        
         if resultado is None:
             return
-        print("Resposta recebida:", resultado)
 
         for botao in self.estado["botoes"]:
             botao.configure(state="disabled")
@@ -226,13 +227,11 @@ class TelaLicao(ctk.CTkFrame):
         self.botao_proximo.pack(
             pady=5
         )        
-        print("Botão próxima foi exibido!")
 
 
 
     def proxima(self):
 
-        print("Método próxima foi chamado!")
 
         self.estado["indice"] += 1
 
@@ -270,13 +269,27 @@ class TelaLicao(ctk.CTkFrame):
             )
         )
 
-        self.frame_resultado.pack(
-            expand=True,
-            fill="both",
-            padx=20,
-            pady=20
-        )
-    
+        self.label_resultado.pack(pady=40)
+        self.label_estatisticas.pack(pady=20)
+        self.botao_voltar.pack(pady=20)    
+
+    def preparar_nova_licao(self):
+
+        self.label_resultado.pack_forget()
+        self.label_estatisticas.pack_forget()
+        self.botao_voltar.pack_forget()
+
+        self.label_titulo.pack(pady=(20, 5))
+        self.label_enunciado.pack(pady=5)
+        self.label_midia.pack(pady=5)
+        self.frame_opcoes.pack(pady=2)
+        self.label_feedback.pack(pady=3)
+
+        self.botao_proximo.pack_forget()
+
+        for widget in self.frame_opcoes.winfo_children():
+            widget.destroy()
+
 
     def configurar_licao(self, usuario_id, modulo_id):
 
@@ -292,14 +305,9 @@ class TelaLicao(ctk.CTkFrame):
         self.label_feedback.configure(text="")
         self.label_midia.configure(text="", image=self.vazio)
 
-        self.botao_proximo.pack_forget()
-
-        for widget in self.frame_opcoes.winfo_children():
-            widget.destroy()
-
         dados = self.api.chamar(
             "GET",
-            f"/modulos/{modulo_id}/licao",
+            f"/modulos/{self.modulo_id}/licao",
             params={"qtd": 5}
         )
 
@@ -325,15 +333,3 @@ class TelaLicao(ctk.CTkFrame):
         }
 
         self.mostrar_questao()
-
-    def preparar_nova_licao(self):
-
-        self.frame_resultado.pack_forget()
-
-        self.label_titulo.pack(pady=(20, 5))
-        self.label_enunciado.pack(pady=5)
-        self.label_midia.pack(pady=5)
-        self.frame_opcoes.pack(pady=2)
-        self.label_feedback.pack(pady=3)
-
-        self.botao_proximo.pack_forget()

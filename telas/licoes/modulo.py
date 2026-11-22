@@ -2,8 +2,7 @@
 import customtkinter as ctk
 
 from .api_cliente import APICliente
-#from licao import TelaLicao
-
+from telas.gerenciador_fundos import GerenciadorFundos
 
 class TelaModulos(ctk.CTkFrame):
 
@@ -20,6 +19,11 @@ class TelaModulos(ctk.CTkFrame):
 
     def criar_componentes(self):
 
+        self.imagem_fundo = GerenciadorFundos.aplicar(
+            self,
+            "500x400.jpeg"
+        )
+
         ctk.CTkLabel(
             self,
             text="Escolha um módulo",
@@ -33,7 +37,9 @@ class TelaModulos(ctk.CTkFrame):
         )
         self.label_mensagem.pack(pady=5)
 
-        self.frame_modulos = ctk.CTkFrame(self)
+        self.frame_modulos = ctk.CTkFrame(self,
+                                          fg_color="transparent"
+                                          )
         self.frame_modulos.pack(pady=10)
 
     def carregar_modulos(self):

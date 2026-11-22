@@ -1,8 +1,8 @@
 
 import customtkinter as ctk
-from tkinter import messagebox
 
 from conta.gerenciamento_conta import Conta
+from telas.gerenciador_fundos import GerenciadorFundos
 
 
 class TelaLogin(ctk.CTkFrame):
@@ -16,6 +16,11 @@ class TelaLogin(ctk.CTkFrame):
         self.criar_componentes()
 
     def criar_componentes(self):
+
+        self.imagem_fundo = GerenciadorFundos.aplicar(
+            self,
+            "500x400.jpeg"
+        )
 
         self.label_mensagem = ctk.CTkLabel(
         self,

@@ -1,5 +1,6 @@
 
 import customtkinter as ctk
+from telas.gerenciador_fundos import GerenciadorFundos
 
 # from telas.Licoes.modulo import TelaModulos
 # from telas.Licoes.ranking import TelaRanking
@@ -20,6 +21,12 @@ class MenuUsuario(ctk.CTkFrame):
         self.criar_componentes()
 
     def criar_componentes(self):
+
+        self.imagem_fundo = GerenciadorFundos.aplicar(
+            self,
+            "cartao_librascode.jpeg"
+        )
+
 
         self.label_mensagem = ctk.CTkLabel(
         self,

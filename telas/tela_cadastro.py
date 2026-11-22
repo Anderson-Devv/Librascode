@@ -2,6 +2,7 @@
 import customtkinter as ctk
 
 from conta.gerenciamento_conta import Conta
+from telas.gerenciador_fundos import GerenciadorFundos
 
 class TelaCadastro(ctk.CTkFrame):
 
@@ -13,6 +14,11 @@ class TelaCadastro(ctk.CTkFrame):
         self.criar_componentes()
 
     def criar_componentes(self):
+
+        self.imagem_fundo = GerenciadorFundos.aplicar(
+            self,
+            "500x400.jpeg"
+        )
 
         self.label_mensagem = ctk.CTkLabel(
         self,
