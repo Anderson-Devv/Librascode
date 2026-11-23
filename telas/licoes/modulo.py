@@ -1,7 +1,5 @@
 import customtkinter as ctk
 from telas.licoes.api_cliente import APICliente
-#from licao import TelaLicao
-
 
 class TelaModulos(ctk.CTkFrame):
 
