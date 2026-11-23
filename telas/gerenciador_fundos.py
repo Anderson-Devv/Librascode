@@ -22,7 +22,6 @@ class GerenciadorFundos:
 
         fundo = ctk.CTkLabel(tela, text="")
         fundo.place(x=0, y=0, relwidth=1, relheight=1)
-        #fundo.lower()
 
         ultimo_tamanho = None
 
@@ -63,9 +62,6 @@ class GerenciadorFundos:
 
             fundo.configure(image=foto)
             fundo.imagem = foto
-
-            print("Imagem configurada!")
-            print("Dimensões da imagem:", imagem.size)
 
         tela.bind("<Configure>", redimensionar, add="+")
 

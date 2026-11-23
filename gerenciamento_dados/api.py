@@ -18,7 +18,7 @@ import random
 
 from flask import Flask, jsonify, request, send_from_directory
 
-from librascodebd import conexao_banco
+from gerenciamento_dados.librascodebd import conexao_banco
 
 app = Flask(__name__)
 
@@ -135,6 +135,62 @@ def responder():
     return jsonify({"acertou": acertou, "correta": sinal["palavra"], "pontos": pontos})
 
 
+@app.post("/historico")
+def registrar_historico():
+
+    dados = request.get_json(silent=True) or {}
+
+    usuario_id = dados.get("usuario_id")
+    modulo_id = dados.get("modulo_id")
+    pontuacao = dados.get("pontuacao")
+
+    if usuario_id is None or modulo_id is None or pontuacao is None:
+        return erro("Envie usuario_id, modulo_id e pontuacao.")
+
+    try:
+        usuario_id = int(usuario_id)
+        modulo_id = int(modulo_id)
+        pontuacao = int(pontuacao)
+    except (ValueError, TypeError):
+        return erro("Os identificadores e a pontuação devem ser números.")
+
+    if usuario_id <= 0 or modulo_id <= 0 or pontuacao < 0:
+        return erro("Valores inválidos.")
+
+    usuario = consultar(
+        "SELECT idlibrascode FROM librascode WHERE idlibrascode = %s",
+        (usuario_id,),
+        um=True
+    )
+
+    if not usuario:
+        return erro("Usuário não encontrado.", 404)
+
+    modulo = consultar(
+        "SELECT id FROM modulos WHERE id = %s",
+        (modulo_id,),
+        um=True
+    )
+
+    if not modulo:
+        return erro("Módulo não encontrado.", 404)
+
+    novo_id = executar(
+        """
+        INSERT INTO historico_modulo
+        (usuario_id, modulo_id, pontuacao)
+        VALUES (%s, %s, %s)
+        """,
+        (usuario_id, modulo_id, pontuacao)
+    )
+
+    return jsonify({
+        "mensagem": "Realização registrada com sucesso!",
+        "historico_id": novo_id,
+        "pontuacao": pontuacao
+    }), 201
+
+
 @app.post("/sinais")
 def criar_sinal():
     dados = request.get_json(silent=True) or {}
@@ -158,6 +214,41 @@ def criar_sinal():
 def servir_midia(arquivo):
     return send_from_directory(PASTA_MIDIA, arquivo)
 
+@app.get("/usuarios/<int:usuario_id>/perfil")
+def consultar_perfil(usuario_id):
+
+    perfil = consultar(
+        """
+        SELECT usuario, email
+        FROM librascode
+        WHERE idlibrascode = %s
+        """,
+        (usuario_id,),
+        um=True
+    )
+
+    if not perfil:
+        return jsonify({"erro": "Usuário não encontrado"}), 404
+
+    modulos = consultar(
+        """
+        SELECT
+            m.id,
+            m.nome,
+            COUNT(h.id) AS vezes_realizado
+        FROM modulos m
+        LEFT JOIN historico_modulo h
+            ON h.modulo_id = m.id
+            AND h.usuario_id = %s
+        GROUP BY m.id, m.nome
+        ORDER BY m.id
+        """,
+        (usuario_id,)
+    )
+
+    perfil["modulos"] = modulos
+
+    return jsonify(perfil)
 
 def iniciar_api():
     os.makedirs(PASTA_MIDIA, exist_ok=True)

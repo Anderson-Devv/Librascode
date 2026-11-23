@@ -240,7 +240,13 @@ class TelaLicao(ctk.CTkFrame):
         else:
             self.mostrar_questao()
 
+
     def finalizar(self):
+
+        if self.estado.get("finalizado", False):
+            return
+
+        self.estado["finalizado"] = True
 
         self.parar_animacao()
 
@@ -257,8 +263,23 @@ class TelaLicao(ctk.CTkFrame):
 
         porcentagem = (acertos / total) * 100
 
+        resultado = self.api.chamar(
+            "POST",
+            "/historico",
+            json={
+                "usuario_id": self.usuario_id,
+                "modulo_id": self.modulo_id,
+                "pontuacao": pontos
+            }
+        )
+
+        if resultado is None:
+            mensagem_historico = "\nerro ao salvar o histórico."
+        else:
+            mensagem_historico = "\nHistórico salvo com sucesso!"
+
         self.label_resultado.configure(
-            text="Lição concluída!"
+            text=("Lição concluída!"),
         )
 
         self.label_estatisticas.configure(
@@ -266,12 +287,13 @@ class TelaLicao(ctk.CTkFrame):
                 f"Acertos: {acertos}/{total}\n"
                 f"Aproveitamento: {porcentagem:.1f}%\n"
                 f"Pontuação: {pontos} pontos"
+                f"{mensagem_historico}"
             )
         )
 
         self.label_resultado.pack(pady=40)
         self.label_estatisticas.pack(pady=20)
-        self.botao_voltar.pack(pady=20)    
+        self.botao_voltar.pack(pady=20)
 
     def preparar_nova_licao(self):
 
@@ -329,7 +351,8 @@ class TelaLicao(ctk.CTkFrame):
             "frames": [],
             "quadro": 0,
             "job": None,
-            "botoes": []
+            "botoes": [],
+            "finalizado": False
         }
 
         self.mostrar_questao()

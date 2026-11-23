@@ -6,6 +6,7 @@ from telas.menu_usuario import MenuUsuario
 from telas.tela_cadastro import TelaCadastro
 from telas.licoes.modulo import TelaModulos
 from telas.tela_licao import TelaLicao
+from telas.tela_perfil import TelaPerfil
 
 class Interface:
 
@@ -28,6 +29,7 @@ class Interface:
         self.adicionar_tela("cadastro", TelaCadastro )
         self.adicionar_tela("modulos", TelaModulos)
         self.adicionar_tela("licao", TelaLicao)
+        self.adicionar_tela("perfil", TelaPerfil)
         self.mostrar_tela("login")
 
     def adicionar_tela(self, nome, classe_tela):

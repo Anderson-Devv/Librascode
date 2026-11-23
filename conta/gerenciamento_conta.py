@@ -19,18 +19,21 @@ class Conta:
             conexao = conexao_banco()
             cursor = conexao.cursor()
             cursor.execute(
-                "SELECT idlibrascode FROM librascode WHERE email = %s AND senha = %s",
-                (self.email, self.senha),
+                """
+                SELECT idlibrascode, usuario
+                FROM librascode
+                WHERE email = %s AND senha = %s
+                """,
+                (self.email, self.senha)
             )
+
             resultado = cursor.fetchone()
-            
+
             if resultado:
-                print("\nLogin realizado com sucesso! Bem-vindo.\n")
+                self.usuario = resultado[1]
                 return resultado[0]
             else:
-                print("\nUsuário ou senha incorretos.\n")
-                return 
-            
+                return            
         except mysql.connector.Error as erro:
             print(f"Erro no login: {erro}")
             
@@ -248,3 +251,57 @@ class Conta:
                     cursor.close()
                 if conexao is not None:
                     conexao.close()
+
+    def alterar_usuario(self):
+
+        dialog = ctk.CTkInputDialog(
+            text="Digite o novo usuário",
+            title="Alterar Usuário"
+        )
+
+        novo_usuario = dialog.get_input()
+
+        if not novo_usuario:
+            return False
+
+        if len(novo_usuario) < 3 or len(novo_usuario) > 15:
+            return "nome_invalido"
+
+        if novo_usuario == self.usuario:
+            return "usuario_igual"
+
+        conexao = None
+        cursor = None
+
+        try:
+            conexao = conexao_banco()
+            cursor = conexao.cursor()
+
+            cursor.execute(
+                """
+                UPDATE librascode
+                SET usuario = %s
+                WHERE email = %s
+                """,
+                (novo_usuario, self.email)
+            )
+
+            if cursor.rowcount == 0:
+                return "usuario_nao_encontrado"
+
+            conexao.commit()
+
+            self.usuario = novo_usuario
+
+            return True
+
+        except mysql.connector.Error as erro:
+            print(f"Erro ao alterar usuário: {erro}")
+            return "erro_bd"
+
+        finally:
+            if cursor is not None:
+                cursor.close()
+
+            if conexao is not None:
+                conexao.close()
