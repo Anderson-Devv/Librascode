@@ -4,7 +4,6 @@ import tkinter as tk
 import customtkinter as ctk
 from PIL import Image, ImageOps, ImageTk
 
-# raiz do projeto / files / midia  (este arquivo está em telas/)
 PASTA = os.path.join(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "files", "midia"
 )
@@ -27,9 +26,9 @@ class FundoEscalavel(tk.Label):
         self.arquivo = arquivo
         self.modo = modo
         self.cor = cor
-        self.atraso = atraso          # ms parados até redesenhar (evita redesenhar a cada pixel)
+        self.atraso = atraso
         self.original = Image.open(os.path.join(PASTA, arquivo)).convert("RGB")
-        self.foto = None              # segura a referência (senão o Tk apaga a imagem)
+        self.foto = None
         self.tarefa = None
         self.tamanho = (0, 0)
         
@@ -64,13 +63,11 @@ class FundoEscalavel(tk.Label):
         super().destroy()
         
 def carregar_fundo(arquivo, largura, altura):
-    """Imagem que COBRE largura x altura: recorta o excesso, sem deformar."""
     imagem = Image.open(os.path.join(PASTA, arquivo)).convert("RGB")
     imagem = ImageOps.fit(imagem, (largura, altura), Image.LANCZOS)
     return ctk.CTkImage(light_image=imagem, dark_image=imagem, size=(largura, altura))
 
 def colocar_fundo(janela, imagem):
-    """Cria o fundo ATRÁS de tudo: chame antes de criar os outros widgets."""
     fundo = ctk.CTkLabel(janela, text="", image=imagem)
     fundo.place(x=0, y=0, relwidth=1, relheight=1)
     return fundo
