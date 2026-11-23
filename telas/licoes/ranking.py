@@ -17,8 +17,6 @@ class TelaRanking(ctk.CTkFrame):
         
         FundoEscalavel(self, "500x400.jpeg")
 
-        # cartão central: o conteúdo fica dentro dele, por cima do fundo
-        # (sem o cartão, cada texto apareceria num retângulo de cor sobre a imagem)
         cartao = ctk.CTkFrame(self, corner_radius=16)
         cartao.place(relx=0.5, rely=0.5, anchor="center")
         

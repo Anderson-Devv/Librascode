@@ -21,8 +21,6 @@ class GerenciadorMidia:
         self.tamanho = (320, 320)
         
     def carregar_frames(self, arquivo):
-        """Devolve (lista de quadros, duração de cada quadro em ms).
-        PNG/JPG vira 1 quadro; GIF vira vários. Se o arquivo não existe, devolve lista vazia."""
         caminho = os.path.join(
             self.pasta_midia,
             arquivo

@@ -45,8 +45,6 @@ def erro(mensagem, codigo=400):
 
 @app.get("/ranking")
 def ranking():
-    """Ranking de todos os usuários pelo número de questões acertadas.
-    RANK() dá a mesma posição para quem empata (1, 1, 3...)."""
     linhas = consultar(
         """
         SELECT c.idcadastrolibrascode AS usuario_id,
