@@ -11,8 +11,6 @@ class Conta:
         self.senha = senha
 
     def _executar(self, sql, params):
-        """Abre uma conexão só para esta operação e fecha no final.
-        (Uma conexão global fica aberta por horas e o MySQL acaba derrubando.)"""
         conexao = conexao_banco()
         try:
             cursor = conexao.cursor()
@@ -139,7 +137,7 @@ class Conta:
             messagebox.showerror("Erro", str(erro))
             return
         
-        self.email = novo_email   # sem isso, as próximas operações procurariam o email antigo
+        self.email = novo_email
         messagebox.showinfo("Sucesso", "Email alterado!")
         return True
 
