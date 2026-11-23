@@ -1,18 +1,3 @@
-"""
-Framework do cadastrolibrascode (Flask).
-
-Rodar:  python api_cadastrolibrascode.py   (deixe rodando em um terminal)
-Depende de: pip install flask mysql-connector-python
-
-Rotas:
-  GET  /modulos                      lista os módulos
-  GET  /modulos/<id>/licao?qtd=5     GERA uma lição (questões aleatórias, sem o gabarito)
-  POST /respostas                    corrige a resposta, guarda e devolve os pontos
-  GET  /ranking                      top 10 usuários por pontuação
-  GET  /usuarios/<id>/pontuacao      pontuação total e por módulo de um usuário
-  POST /sinais                       cadastra um novo sinal (palavra + arquivo de mídia)
-  GET  /midia/<arquivo>              serve imagens/gifs da pasta ./midia
-"""
 import os
 import random
 from flask import Flask, jsonify, request, send_from_directory
@@ -60,8 +45,6 @@ def erro(mensagem, codigo=400):
 
 @app.get("/ranking")
 def ranking():
-    """Ranking de todos os usuários pelo número de questões acertadas.
-    RANK() dá a mesma posição para quem empata (1, 1, 3...)."""
     linhas = consultar(
         """
         SELECT c.idcadastrolibrascode AS usuario_id,
@@ -96,8 +79,6 @@ def listar_modulos():
 
 @app.get("/modulos/<int:modulo_id>/licao")
 def gerar_licao(modulo_id):
-    """Cria as questões na hora: 'Que palavra representa este sinal?'
-    A resposta certa é a palavra do sinal; as erradas vêm de outros sinais."""
     sinais = consultar(
         "SELECT id, palavra, midia FROM sinais WHERE modulo_id = %s", (modulo_id,)
     )
