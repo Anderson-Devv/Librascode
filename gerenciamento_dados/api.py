@@ -1,18 +1,3 @@
-"""
-Framework do cadastrolibrascode (Flask).
-
-Rodar:  python api_cadastrolibrascode.py   (deixe rodando em um terminal)
-Depende de: pip install flask mysql-connector-python
-
-Rotas:
-  GET  /modulos                      lista os módulos
-  GET  /modulos/<id>/licao?qtd=5     GERA uma lição (questões aleatórias, sem o gabarito)
-  POST /respostas                    corrige a resposta, guarda e devolve os pontos
-  GET  /ranking                      top 10 usuários por pontuação
-  GET  /usuarios/<id>/pontuacao      pontuação total e por módulo de um usuário
-  POST /sinais                       cadastra um novo sinal (palavra + arquivo de mídia)
-  GET  /midia/<arquivo>              serve imagens/gifs da pasta ./midia
-"""
 import os
 import random
 from flask import Flask, jsonify, request, send_from_directory
@@ -93,11 +78,27 @@ def listar_modulos():
     )
     return jsonify(modulos)
 
+# ---------- Pesquisa ----------
+
+@app.get("/pesquisa")
+def buscar_itens():
+    
+    termo = request.args.get("termo", "")
+    
+    pesquisa = consultar(
+        """
+        SELECT id, palavra, midia
+        FROM sinais
+        WHERE palavra LIKE %s
+        ORDER BY palavra ASC
+        """,
+        (f"%{termo}%",)
+    )
+    return jsonify(pesquisa)
+
 
 @app.get("/modulos/<int:modulo_id>/licao")
 def gerar_licao(modulo_id):
-    """Cria as questões na hora: 'Que palavra representa este sinal?'
-    A resposta certa é a palavra do sinal; as erradas vêm de outros sinais."""
     sinais = consultar(
         "SELECT id, palavra, midia FROM sinais WHERE modulo_id = %s", (modulo_id,)
     )
@@ -122,7 +123,6 @@ def gerar_licao(modulo_id):
                 "enunciado": "Que palavra este sinal representa?",
                 "midia": sinal["midia"],
                 "opcoes": opcoes,
-                # o gabarito NÃO é enviado aqui; ele só aparece depois da resposta
             }
         )
     return jsonify({"modulo_id": modulo_id, "questoes": questoes})
@@ -161,26 +161,7 @@ def responder():
     return jsonify({"acertou": acertou, "correta": sinal["palavra"], "pontos": pontos})
 
 
-# ---------- conteúdo (cadastro de sinais) e mídia ----------
-
-@app.post("/sinais")
-def criar_sinal():
-    dados = request.get_json(silent=True) or {}
-    modulo_id = dados.get("modulo_id")
-    palavra = (dados.get("palavra") or "").strip()
-    midia = (dados.get("midia") or "").strip()
-
-    if not modulo_id or not palavra or not midia:
-        return erro("Envie modulo_id, palavra e midia.")
-    if not os.path.exists(os.path.join(PASTA_MIDIA, midia)):
-        return erro(f"Arquivo '{midia}' não existe na pasta midia/.", 404)
-
-    novo_id = executar(
-        "INSERT INTO sinais (modulo_id, palavra, midia) VALUES (%s, %s, %s)",
-        (modulo_id, palavra, midia),
-    )
-    return jsonify({"id": novo_id, "palavra": palavra, "midia": midia}), 201
-
+# ---------- mídia ----------
 
 @app.get("/midia/<path:arquivo>")
 def servir_midia(arquivo):
@@ -189,7 +170,6 @@ def servir_midia(arquivo):
 
 def iniciar_api():
     os.makedirs(PASTA_MIDIA, exist_ok=True)
-    # debug e reloader desligados: eles não funcionam fora da thread principal
     app.run(host="127.0.0.1", port=5000, debug=False, use_reloader=False)
 
 

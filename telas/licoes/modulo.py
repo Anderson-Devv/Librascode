@@ -83,3 +83,4 @@ class TelaModulos(ctk.CTkFrame):
         self.usuario_id = usuario_id
 
         self.carregar_modulos()
+        

@@ -124,8 +124,12 @@ class Conta:
         novo_email = dialog.get_input()
         
         if not novo_email:
-            return 
-
+            return
+        
+        if "@ufrpe.br" not in novo_email:
+            messagebox.showerror("Erro", "Email precisa conter @ufrpe.br")
+            return
+                        
         try:
             self._executar(
             """

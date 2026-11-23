@@ -35,6 +35,13 @@ class MenuUsuario(ctk.CTkFrame):
 
         ctk.CTkButton(
             self,
+            text="Pesquisar Sinais",
+            width=250,
+            command=lambda: self.controlador.mostrar_tela("pesquisa")
+        ).pack(pady=10)
+        
+        ctk.CTkButton(
+            self,
             text="Alterar Senha",
             width=250,
             command=self.alterar_senha
