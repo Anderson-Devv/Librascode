@@ -330,6 +330,12 @@ def servir_sticker(arquivo):
 
 @app.post("/historico")
 def registrar_historico():
+
+    dados = request.get_json(silent=True) or {}
+
+    usuario_id = dados.get("usuario_id")
+    modulo_id = dados.get("modulo_id")
+    pontuacao = dados.get("pontuacao")
     
     ja_existe = consultar(
         """
@@ -346,12 +352,6 @@ def registrar_historico():
         return jsonify({
             "mensagem": "Módulo já registrado."
         }), 200
-
-    dados = request.get_json(silent=True) or {}
-
-    usuario_id = dados.get("usuario_id")
-    modulo_id = dados.get("modulo_id")
-    pontuacao = dados.get("pontuacao")
 
     if usuario_id is None or modulo_id is None or pontuacao is None:
         return erro("Envie usuario_id, modulo_id e pontuacao.")
