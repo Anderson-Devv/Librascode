@@ -24,16 +24,16 @@ Inicialmente, o LibrasCode está voltado para o público universitário da Unive
 | Funcionalidade                     | Descrição                                                                                                                                |
 | ---------------------------------- | -----------------------------------------------------------------------------------------------------------------------------------------|
 | Ranking Global                     | Preencher                                                                                                                                |
-| Preencher                          | Preencher                                                                                                                                |
-| Preencher                          | Preencher                                                                                                                                |
-| Preencher                          | Preencher                                                                                                                                |
-| Preencher                          | Preencher                                                                                                                                |
-| Preencher                          | Preencher                                                                                                                                |
-| Preencher                          | Preencher                                                                                                                                |
+| Recompensas (Medalhas)             | Preencher                                                                                                                                |
+| Pesquisar Sinais                   | Preencher                                                                                                                                |
+| Favoritar Sinais                   | Preencher                                                                                                                                |
+| Certificado                        | Preencher                                                                                                                                |
+
 
 ## 📚 Tecnologias & Bibliotecas Utilizadas
 | Tecnologia / Biblioteca            | Utilização                                                                                                                               |
 | ---------------------------------- | -----------------------------------------------------------------------------------------------------------------------------------------|
+| Python                             | Linguagem de progromação utilizada para desenvolvimento do projeto                                                                       |
 | mysql.connector                    | Conectar o Python ao banco de dados MySQL, executar consultas e tratar erros de conexão.                                                 |
 | customtkinter                      | Criar a interface gráfica do sistema, incluindo janelas, botões, campos de texto, caixas de diálogo e entre outros.                      |         
 | Pillow (PIL)                       | Carregar, redimensionar e manipular imagens utilizadas na interface e nas lições.                                                        |
