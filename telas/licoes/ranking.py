@@ -33,7 +33,7 @@ class TelaRanking(ctk.CTkFrame):
         )
         self.label_mensagem.pack(pady=5)
         
-        # as linhas do ranking ficam aqui dentro: a cada abertura são apagadas e refeitas
+      
         self.frame_linhas = ctk.CTkFrame(cartao, fg_color="transparent")
         self.frame_linhas.pack(pady=10)
         
@@ -76,13 +76,13 @@ class TelaRanking(ctk.CTkFrame):
                 font=("Arial", 16),
             ).pack(pady=20)
 
-        # procura a linha do usuário logado
+    
         minha = None
         for linha in ranking:
             if linha["usuario_id"] == self.usuario_id:
                 minha = linha
 
-        # mostra o top 10 e destaca o usuário logado
+
         for linha in ranking[:10]:
             eu = linha["usuario_id"] == self.usuario_id
             texto = f"{linha['ranking']}º   {linha['usuario']}   -   {linha['acertos']} acertos   -   {linha['pontos']} pontos"
@@ -99,7 +99,7 @@ class TelaRanking(ctk.CTkFrame):
             if eu:
                 label.configure(text_color="gold")
 
-        # se o usuário ficou fora do top 10, mostra a posição dele embaixo
+
         if ranking:
             if minha is None:
                 mensagem = "Você ainda não tem acertos."
