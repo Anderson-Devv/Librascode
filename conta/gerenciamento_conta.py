@@ -195,15 +195,28 @@ class Conta:
         )
 
         if resposta:
-
+            
             try:
+                self._executar(
+                    """
+                    DELETE FROM usuario_conquistas
+                    WHERE usuario_id =
+                    (
+                        SELECT idcadastrolibrascode
+                        FROM cadastrolibrascode
+                        WHERE email = %s
+                    )
+                    """,
+                    (self.email,)
+                )
+                
                 self._executar(
                     """
                     DELETE FROM cadastrolibrascode
                     WHERE email=%s
                     """,
                     (self.email,),
-            )
+                )
             except Exception as erro:
                 messagebox.showerror("Erro", str(erro))
                 return

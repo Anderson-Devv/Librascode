@@ -2,7 +2,6 @@ import os
 import random
 from flask import Flask, jsonify, request, send_from_directory
 from gerenciamento_dados.librascodebd import conexao_banco
-import shutil
 from tkinter import filedialog
 
 app = Flask(__name__)
@@ -220,10 +219,12 @@ def listar_conquistas(usuario_id):
             c.nome,
             c.descricao,
             c.sticker
+            c.pontos_necessarios
         FROM conquistas c
         INNER JOIN usuario_conquistas uc
             ON uc.conquista_id = c.id
         WHERE uc.usuario_id = %s
+        ORDER BY c.pontos_necessarios
         """,
         (usuario_id,)
     )
@@ -234,19 +235,6 @@ def listar_conquistas(usuario_id):
 def servir_sticker(arquivo):
     return send_from_directory(PASTA_STICKERS, arquivo)
 
-def baixar_sticker(self, nome_arquivo):
-
-    destino = filedialog.asksaveasfilename(
-        initialfile=nome_arquivo,
-        defaultextension=".png"
-    )
-
-    if destino:
-
-        shutil.copy(
-            f"files/stickers/{nome_arquivo}",
-            destino
-        )
 # ---------- histórico de lições ----------
 
 @app.post("/historico")
@@ -313,6 +301,7 @@ def servir_midia(arquivo):
 
 def iniciar_api():
     os.makedirs(PASTA_MIDIA, exist_ok=True)
+    os.makedirs(PASTA_STICKERS,exist_ok=True)
     app.run(host="127.0.0.1", port=5000, debug=False, use_reloader=False)
 
 if __name__ == "__main__":

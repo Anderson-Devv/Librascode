@@ -41,11 +41,18 @@ class MenuUsuario(ctk.CTkFrame):
         ).pack(pady=10)
 
         ctk.CTkButton(
-             self,
-             text="Ranking",
-             width=250,
-             command=self.abrir_ranking
+            self,
+            text="Ranking",
+            width=250,
+            command=self.abrir_ranking
          ).pack(pady=10)
+
+        ctk.CTkButton(
+            self,
+            text="Conquistas",
+            width=250,
+            command=self.abrir_conquistas
+)       .pack(pady=10)
 
         ctk.CTkButton(
             self,
@@ -95,7 +102,17 @@ class MenuUsuario(ctk.CTkFrame):
         ranking = self.controlador.telas["ranking"]
         ranking.configurar_usuario(self.usuario_id)
         self.controlador.mostrar_tela("ranking")
+    def abrir_conquistas(self):
 
+        conquistas = self.controlador.telas["conquistas"]
+
+        conquistas.configurar_usuario(
+        self.usuario_id
+        )
+
+        self.controlador.mostrar_tela(
+        "conquistas"
+        )
     def alterar_senha(self):
 
         self.conta.alterar_senha()
