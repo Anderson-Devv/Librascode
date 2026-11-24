@@ -2,7 +2,7 @@ import customtkinter as ctk
 from telas.fundo import FundoEscalavel
 from telas.licoes.api_cliente import APICliente
 from tkinter import filedialog, messagebox
-from conta.recompensas import Recompensas
+from conta.recompensas_certificado import Recompensas
 import requests 
 class MenuUsuario(ctk.CTkFrame):
 
@@ -237,11 +237,13 @@ class MenuUsuario(ctk.CTkFrame):
             pontos
         )
 
-        messagebox.showinfo(
-            "Certificado",
-            f"Certificado gerado com sucesso!\n\n{caminho}"
-        )
-        
+        if caminho:
+
+            messagebox.showinfo(
+                "Certificado",
+                "Certificado salvo com sucesso!"
+            )
+            
     def baixar_guia(self):
 
         resposta = requests.get(

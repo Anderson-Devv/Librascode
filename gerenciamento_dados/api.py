@@ -322,6 +322,15 @@ def verificar_certificado(usuario_id):
 
     return concluidos >= total_modulos
 
+@app.get("/certificado/<int:usuario_id>")
+def certificado(usuario_id):
+
+    liberado = verificar_certificado(usuario_id)
+
+    return jsonify({
+        "liberado": liberado
+    })
+
 @app.get("/stickers/<path:arquivo>")
 def servir_sticker(arquivo):
     return send_from_directory(PASTA_STICKERS, arquivo)
