@@ -242,6 +242,16 @@ class TelaLicao(ctk.CTkFrame):
     
     def finalizar(self):
         
+        self.api.chamar(
+            "POST",
+            "/historico",
+            json={
+                "usuario_id": self.usuario_id,
+                "modulo_id": self.modulo_id,
+                "pontuacao": self.estado["pontos"]
+            }
+        )
+            
         self.parar_animacao()
         
         self.label_titulo.pack_forget()
