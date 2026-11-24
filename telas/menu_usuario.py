@@ -39,7 +39,14 @@ class MenuUsuario(ctk.CTkFrame):
             width=250,
             command=lambda: self.controlador.mostrar_tela("pesquisa")
         ).pack(pady=10)
-        
+
+        ctk.CTkButton(
+             self,
+             text="Ranking",
+             width=250,
+             command=self.abrir_ranking
+         ).pack(pady=10)
+
         ctk.CTkButton(
             self,
             text="Alterar Senha",
@@ -52,6 +59,13 @@ class MenuUsuario(ctk.CTkFrame):
             text="Alterar Email",
             width=250,
             command=self.alterar_email
+        ).pack(pady=10)
+        
+        ctk.CTkButton(
+            self,
+            text="Alterar Usuário",
+            width=250,
+            command=self.alterar_usuario
         ).pack(pady=10)
 
         ctk.CTkButton(
@@ -69,13 +83,6 @@ class MenuUsuario(ctk.CTkFrame):
             width=250,
             command=lambda: self.controlador.mostrar_tela("login")
         ).pack(pady=10)
-
-        ctk.CTkButton(
-             self,
-             text="Ranking",
-             width=250,
-             command=self.abrir_ranking
-         ).pack(pady=10)
 
     def fazer_licao(self):
 
@@ -98,7 +105,7 @@ class MenuUsuario(ctk.CTkFrame):
         if self.conta.alterar_email():
             self.email = self.conta.email
             self.label_usuario.configure(
-                text=f"Usuário logado:\n{self.email}"
+                text=f"Usuário logado:\n{self.usuario}"
             )
 
     def deletar_conta(self):
@@ -106,11 +113,19 @@ class MenuUsuario(ctk.CTkFrame):
         if self.conta.deletar_conta():
             self.controlador.mostrar_tela("login")
         
-    def configurar_usuario(self, email, usuario_id, conta):
+    def configurar_usuario(self, email, usuario, usuario_id, conta):
         self.email = email
+        self.usuario = usuario
         self.usuario_id = usuario_id
         self.conta = conta
 
         self.label_usuario.configure(
-            text=f"Usuário logado:\n{self.email}"
+            text=f"Usuário logado:\n{self.usuario}"
+        )
+    
+    def alterar_usuario(self):
+        if self.conta.alterar_usuario():
+            self.novo_usuario = self.conta.usuario
+            self.label_usuario.configure(
+                text=f"Usuário logado:\n{self.usuario}"
         )

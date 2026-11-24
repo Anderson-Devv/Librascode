@@ -49,5 +49,9 @@ class Interface:
     def executar(self):
 
         self.janela.mainloop()
+        
+if __name__ == "__main__":
+    app = Interface()
+    app.executar()
 
 print("Arquivo interface.py carregado")

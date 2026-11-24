@@ -15,7 +15,7 @@ class TelaRanking(ctk.CTkFrame):
         
     def montar_ranking(self):
         
-        FundoEscalavel(self, "500x400.jpeg")
+        FundoEscalavel(self, "tela do ranking.jpeg")
 
         cartao = ctk.CTkFrame(self, corner_radius=16)
         cartao.place(relx=0.5, rely=0.5, anchor="center")
@@ -85,11 +85,17 @@ class TelaRanking(ctk.CTkFrame):
         # mostra o top 10 e destaca o usuário logado
         for linha in ranking[:10]:
             eu = linha["usuario_id"] == self.usuario_id
-            texto = f"{linha['ranking']}º   {linha['usuario']}   -   {linha['acertos']} acertos"
+            texto = f"{linha['ranking']}º   {linha['usuario']}   -   {linha['acertos']} acertos   -   {linha['pontos']} pontos"
             if eu:
                 texto += "   (você)"
-            label = ctk.CTkLabel(self.frame_linhas, text=texto, font=("Arial", 16))
+                
+            label = ctk.CTkLabel(
+                self.frame_linhas,
+                text=texto,
+                font=("Arial", 16)
+            )
             label.pack(pady=3)
+            
             if eu:
                 label.configure(text_color="gold")
 
@@ -98,7 +104,7 @@ class TelaRanking(ctk.CTkFrame):
             if minha is None:
                 mensagem = "Você ainda não tem acertos."
             elif minha not in ranking[:10]:
-                mensagem = f"Sua posição: {minha['ranking']}º  ({minha['acertos']} acertos)"
+                mensagem = f"Sua posição: {minha['ranking']}º  ({minha['acertos']} acertos)  {minha['pontos']} pontos)"
             else:
                 mensagem = ""
             self.label_posicao.configure(text=mensagem)

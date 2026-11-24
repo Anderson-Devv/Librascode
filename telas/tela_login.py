@@ -10,7 +10,7 @@ class TelaLogin(ctk.CTkFrame):
 
         self.controlador = controlador
         
-        self.fundo = FundoEscalavel(self, "500x400.jpeg")
+        self.fundo = FundoEscalavel(self, "cartão librascode.jpeg")
         
         self.criar_componentes()
 
@@ -83,7 +83,13 @@ class TelaLogin(ctk.CTkFrame):
             self.label_mensagem.pack(pady = 5)
 
             menu = self.controlador.telas["menu"]
-            menu.configurar_usuario(email, resultado, self.conta)
+            
+            menu.configurar_usuario(
+                email,
+                self.conta.usuario,
+                resultado,
+                self.conta
+            )
 
             self.controlador.mostrar_tela("menu")
 

@@ -27,14 +27,21 @@ class Conta:
             conexao = conexao_banco()
             cursor = conexao.cursor()
             cursor.execute(
-                "SELECT idcadastrolibrascode FROM cadastrolibrascode WHERE email = %s AND senha = %s",
-                (self.email, self.senha),
+                """
+                SELECT idcadastrolibrascode, usuario
+                FROM cadastrolibrascode
+                WHERE email = %s AND senha = %s
+                """,
+                (self.email, self.senha)
             )
             resultado = cursor.fetchone()
             
             if resultado:
+                self.usuario = resultado[1]
+                
                 print("\nLogin realizado com sucesso! Bem-vindo.\n")
                 return resultado[0]
+            
             else:
                 print("\nUsuário ou senha incorretos.\n")
                 return 
@@ -49,20 +56,34 @@ class Conta:
                 conexao.close()
 
     def cadastrar(self):
-
-        if len(self.usuario) < 3 or len(self.usuario) > 15:
-            messagebox.showerror("Erro","Usuário deve ter entre 3 e 15 caracteres.")
-            return 
-
-        if "@ufrpe.br" not in self.email:
-            messagebox.showerror("Erro", "Email precisa conter @ufrpe.br")
-            return 
-
-        if len(self.senha) < 8 or len(self.senha) > 15:
-            messagebox.showerror("Erro", "Senha deve ter entre 8 e 15 caracteres.")
-            return 
+        conexao = None
+        cursor = None
 
         try:
+            conexao = conexao_banco()
+            cursor = conexao.cursor()
+
+            cursor.execute(
+                "SELECT idcadastrolibrascode FROM cadastrolibrascode WHERE email = %s",
+                (self.email,)
+            )
+        
+            resultado = cursor.fetchone()
+        
+            if len(self.usuario) < 3 or len(self.usuario) > 15:
+                messagebox.showerror("Erro","Usuário deve ter entre 3 e 15 caracteres.")
+                return 
+
+            if "@ufrpe.br" not in self.email:
+                messagebox.showerror("Erro", "Email precisa conter @ufrpe.br")
+                return 
+
+            if len(self.senha) < 8 or len(self.senha) > 15:
+                messagebox.showerror("Erro", "Senha deve ter entre 8 e 15 caracteres.")
+                return
+
+            if resultado:
+                return "email_existente"
 
             self._executar(
                 """
@@ -94,7 +115,24 @@ class Conta:
         if len(nova_senha) < 8 or len(nova_senha) > 15:
             messagebox.showerror("Erro", "Senha deve ter entre 8 e 15 caracteres.")
             return
+        
+        if self.senha == nova_senha:
+            messagebox.showerror("Erro", "A senha já está sendo usada, tente uma senha diferente.")
+            return
+        
+        conf_senha = ctk.CTkInputDialog(
+            text="Confirme sua senha",
+            title="Confirmação de senha"
+        )
 
+        confirmar_senha = conf_senha.get_input()
+
+        if not confirmar_senha:
+            return False
+
+        if nova_senha != confirmar_senha:
+            return "senhas_diferentes"
+        
         try:
             self._executar(
                 """
@@ -127,6 +165,10 @@ class Conta:
         if "@ufrpe.br" not in novo_email:
             messagebox.showerror("Erro", "Email precisa conter @ufrpe.br")
             return
+        
+        if novo_email == self.email:
+            messagebox.showerror("Erro", "Email igual ao anterior, tente um email novo.")
+            return 
                         
         try:
             self._executar(
@@ -168,3 +210,42 @@ class Conta:
 
             messagebox.showinfo("Sucesso", "Conta deletada!")
             return True
+
+    def alterar_usuario(self):
+        
+        dialog = ctk.CTkInputDialog(
+            text="Digite o novo usuário",
+            title="Alterar usuário"
+        )
+        
+        novo_usuario = dialog.get_input()
+        
+        if not novo_usuario:
+            return False
+        
+        if len(novo_usuario) < 3 or len(novo_usuario) > 15:
+            messagebox.showerror("Erro", "Nome de usuário inválido, tente um nome com mais de 3 caracteres e menos de 15")
+            return
+        
+        if novo_usuario == self.usuario:
+            messagebox.showerror("Erro", "Nome de usuário inválido, tente um nome diferente")
+            return
+        
+        try:
+            self._executar(
+                """
+                UPDATE cadastrolibrascode
+                SET usuario = %s
+                WHERE email = %s
+                """,
+                (novo_usuario, self.email)
+            )
+            
+            self.usuario = novo_usuario
+            
+        except Exception as erro:
+                messagebox.showerror("Erro", str(erro))
+                return
+        
+        messagebox.showinfo("Sucesso", "Novo nome de Usuário alterado com sucesso!")
+        return True

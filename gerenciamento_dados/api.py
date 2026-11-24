@@ -2,11 +2,15 @@ import os
 import random
 from flask import Flask, jsonify, request, send_from_directory
 from gerenciamento_dados.librascodebd import conexao_banco
+import shutil
+from tkinter import filedialog
 
 app = Flask(__name__)
 
+
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PASTA_MIDIA = os.path.join(RAIZ, "files", "midia")
+PASTA_STICKERS = os.path.join(RAIZ, "files", "stickers")
 PONTOS_POR_ACERTO = 10
 QTD_PADRAO = 5
 
@@ -50,7 +54,8 @@ def ranking():
         SELECT c.idcadastrolibrascode AS usuario_id,
                c.usuario AS usuario,
                COALESCE(SUM(r.acertou), 0) AS acertos,
-               RANK() OVER (ORDER BY COALESCE(SUM(r.acertou), 0) DESC) AS ranking
+               COALESCE(SUM(r.pontos), 0) AS pontos,
+               DENSE_RANK() OVER (ORDER BY COALESCE(SUM(r.pontos), 0) DESC) AS ranking
         FROM cadastrolibrascode c
         LEFT JOIN respostas r ON r.usuario_id = c.idcadastrolibrascode
         GROUP BY c.idcadastrolibrascode, c.usuario
@@ -58,7 +63,8 @@ def ranking():
         """
     )
     for linha in linhas:
-        linha["acertos"] = int(linha["acertos"])  # SUM() vem como Decimal
+        linha["acertos"] = int(linha["acertos"])
+        linha["pontos"] = int(linha["pontos"])
     return jsonify(linhas)
     
 # ---------- módulos e lições ----------
@@ -156,8 +162,147 @@ def responder():
         "INSERT INTO respostas (usuario_id, sinal_id, acertou, pontos) VALUES (%s, %s, %s, %s)",
         (usuario_id, sinal_id, int(acertou), pontos),
     )
+    
+    verificar_conquistas(usuario_id)
+    
     return jsonify({"acertou": acertou, "correta": sinal["palavra"], "pontos": pontos})
 
+# ---------- conquistas ----------
+def verificar_conquistas(usuario_id):
+    total_pontos = consultar(
+        """
+        SELECT COALESCE(SUM(pontos),0) AS total
+        FROM respostas
+        WHERE usuario_id = %s
+        """,
+        (usuario_id,),
+        um=True
+    )["total"]
+
+    conquistas = consultar(
+        """
+        SELECT *
+        FROM conquistas
+        WHERE pontos_necessarios <= %s
+        """,
+        (total_pontos,)
+    )
+
+    for conquista in conquistas:
+        existe = consultar(
+            """
+            SELECT id
+            FROM usuario_conquistas
+            WHERE usuario_id = %s
+            AND conquista_id = %s
+            """,
+            (usuario_id, conquista["id"]),
+            um=True
+        )
+
+        if not existe:
+
+            executar(
+                """
+                INSERT INTO usuario_conquistas
+                (usuario_id, conquista_id)
+                VALUES (%s,%s)
+                """,
+                (usuario_id, conquista["id"])
+            )
+
+@app.get("/conquistas/<int:usuario_id>")
+def listar_conquistas(usuario_id):
+
+    conquistas = consultar(
+        """
+        SELECT
+            c.nome,
+            c.descricao,
+            c.sticker
+        FROM conquistas c
+        INNER JOIN usuario_conquistas uc
+            ON uc.conquista_id = c.id
+        WHERE uc.usuario_id = %s
+        """,
+        (usuario_id,)
+    )
+
+    return jsonify(conquistas)
+
+@app.get("/stickers/<path:arquivo>")
+def servir_sticker(arquivo):
+    return send_from_directory(PASTA_STICKERS, arquivo)
+
+def baixar_sticker(self, nome_arquivo):
+
+    destino = filedialog.asksaveasfilename(
+        initialfile=nome_arquivo,
+        defaultextension=".png"
+    )
+
+    if destino:
+
+        shutil.copy(
+            f"files/stickers/{nome_arquivo}",
+            destino
+        )
+# ---------- histórico de lições ----------
+
+@app.post("/historico")
+def registrar_historico():
+
+    dados = request.get_json(silent=True) or {}
+
+    usuario_id = dados.get("usuario_id")
+    modulo_id = dados.get("modulo_id")
+    pontuacao = dados.get("pontuacao")
+
+    if usuario_id is None or modulo_id is None or pontuacao is None:
+        return erro("Envie usuario_id, modulo_id e pontuacao.")
+
+    try:
+        usuario_id = int(usuario_id)
+        modulo_id = int(modulo_id)
+        pontuacao = int(pontuacao)
+    except (ValueError, TypeError):
+        return erro("Os identificadores e a pontuação devem ser números.")
+
+    if usuario_id <= 0 or modulo_id <= 0 or pontuacao < 0:
+        return erro("Valores inválidos.")
+
+    usuario = consultar(
+        "SELECT idcadastrolibrascode FROM cadastrolibrascode WHERE idcadastrolibrascode = %s",
+        (usuario_id,),
+        um=True
+    )
+
+    if not usuario:
+        return erro("Usuário não encontrado.", 404)
+
+    modulo = consultar(
+        "SELECT id FROM modulos WHERE id = %s",
+        (modulo_id,),
+        um=True
+    )
+
+    if not modulo:
+        return erro("Módulo não encontrado.", 404)
+
+    novo_id = executar(
+        """
+        INSERT INTO historico_modulo
+        (usuario_id, modulo_id, pontuacao)
+        VALUES (%s, %s, %s)
+        """,
+        (usuario_id, modulo_id, pontuacao)
+    )
+
+    return jsonify({
+        "mensagem": "Realização registrada com sucesso!",
+        "historico_id": novo_id,
+        "pontuacao": pontuacao
+    }), 201
 
 # ---------- mídia ----------
 
@@ -169,7 +314,6 @@ def servir_midia(arquivo):
 def iniciar_api():
     os.makedirs(PASTA_MIDIA, exist_ok=True)
     app.run(host="127.0.0.1", port=5000, debug=False, use_reloader=False)
-
 
 if __name__ == "__main__":
     iniciar_api()

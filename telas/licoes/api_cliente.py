@@ -20,3 +20,17 @@ class APICliente:
         except requests.RequestException as erro:
             print(f"Erro ao conectar com a API: {erro}")
             return None
+        
+    def buscar_historico(self, usuario_id):
+
+        return self.chamar(
+            "GET",
+            f"/usuarios/{usuario_id}/historico"
+        )
+
+    def buscar_perfil(self, usuario_id):
+
+        return self.chamar(
+            "GET",
+            f"/usuarios/{usuario_id}/perfil"
+        )

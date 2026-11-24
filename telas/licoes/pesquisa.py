@@ -1,7 +1,7 @@
 import customtkinter as ctk
 from telas.licoes.api_cliente import APICliente
 from telas.licoes.midia import GerenciadorMidia
-
+from telas.fundo import FundoEscalavel
 class Pesquisa(ctk.CTkFrame):
      
     def __init__(self, master, controlador):
@@ -11,7 +11,7 @@ class Pesquisa(ctk.CTkFrame):
         self.controlador = controlador
         self.api = APICliente()
         self.midia = GerenciadorMidia()
-        
+        self.fundo = FundoEscalavel(self, "tela de pesquisa.jpeg")
         self.frames = []
         self.frame_atual = 0
         self.duracao = 100

@@ -13,7 +13,7 @@ class TelaLicao(ctk.CTkFrame):
         self.usuario_id = None
         self.modulo_id = None
         
-        self.fundo = FundoEscalavel(self, "cartão librascode.jpeg")
+        self.fundo = FundoEscalavel(self, "500x400.jpeg")
         
         self.api = APICliente()
         self.midia = GerenciadorMidia()
@@ -95,48 +95,6 @@ class TelaLicao(ctk.CTkFrame):
             width=200,
             command=lambda: self.controlador.mostrar_tela("menu")
         ).pack(pady=20)
-
-    def configurar_licao(self, usuario_id, modulo_id):
-
-        self.usuario_id = usuario_id
-        self.modulo_id = modulo_id
-
-        self.preparar_nova_licao()
-
-        self.label_titulo.configure(text="")
-        self.label_enunciado.configure(text="")
-        self.label_feedback.configure(text="")
-        self.botao_proximo.pack_forget()
-
-        dados = self.api.chamar(
-            "GET",
-            f"/modulos/{modulo_id}/licao",
-            params={"qtd": 5}
-        )
-
-        if dados is None:
-            return
-
-        self.questoes = dados["questoes"]
-
-        if not self.questoes:
-            self.label_enunciado.configure(
-                text="Não existem questões neste módulo."
-            )
-            return
-
-        self.estado = {
-            "indice": 0,
-            "acertos": 0,
-            "pontos": 0,
-            "frames": [],
-            "quadro": 0,
-            "job": None,
-            "botoes": []
-        }
-
-        self.mostrar_questao()
-
 
     def parar_animacao(self):
 

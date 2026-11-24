@@ -1,7 +1,5 @@
 import os
 import tkinter as tk
-
-import customtkinter as ctk
 from PIL import Image, ImageOps, ImageTk
 
 PASTA = os.path.join(
@@ -62,12 +60,3 @@ class FundoEscalavel(tk.Label):
             self.tarefa = None
         super().destroy()
         
-def carregar_fundo(arquivo, largura, altura):
-    imagem = Image.open(os.path.join(PASTA, arquivo)).convert("RGB")
-    imagem = ImageOps.fit(imagem, (largura, altura), Image.LANCZOS)
-    return ctk.CTkImage(light_image=imagem, dark_image=imagem, size=(largura, altura))
-
-def colocar_fundo(janela, imagem):
-    fundo = ctk.CTkLabel(janela, text="", image=imagem)
-    fundo.place(x=0, y=0, relwidth=1, relheight=1)
-    return fundo

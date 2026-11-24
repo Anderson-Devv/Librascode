@@ -1,6 +1,6 @@
 import customtkinter as ctk
 from telas.licoes.api_cliente import APICliente
-
+from telas.fundo import FundoEscalavel
 class TelaModulos(ctk.CTkFrame):
 
     def __init__(self, master, controlador):
@@ -9,7 +9,8 @@ class TelaModulos(ctk.CTkFrame):
 
         self.controlador = controlador
         self.usuario_id = None
-
+        
+        self.fundo = FundoEscalavel(self, "500x400.jpeg")
         self.api = APICliente()
 
         self.criar_componentes()
