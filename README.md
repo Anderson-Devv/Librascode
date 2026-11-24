@@ -21,13 +21,13 @@ Inicialmente, o LibrasCode está voltado para o público universitário da Unive
 | Menu                               | Sistema que apresenta ao usuário as funcionalidades disponíveis para ele usufruir                                                        |
 
 ## 🚀 Release 2.0
-| Funcionalidade                     | Descrição                                                                                                                                |
-| ---------------------------------- | -----------------------------------------------------------------------------------------------------------------------------------------|
-| Ranking Global                     | Preencher                                                                                                                                |
-| Recompensas (Medalhas)             | Preencher                                                                                                                                |
-| Pesquisar Sinais                   | Preencher                                                                                                                                |
-| Favoritar Sinais                   | Preencher                                                                                                                                |
-| Certificado                        | Preencher                                                                                                                                |
+| Funcionalidade                     | Descrição                                                                                                                                                       |
+| ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Ranking Global                     | Permite que os usuários vejam suas pontuações e quantidade de acertos, quem possui mais pontos no ranking e os 10 usuários com mais pontos aparecem em destaque |   
+| Recompensas (Medalhas)             | Bônus simbólicos concedidos aos usuários que concluem uma certa quantia de módulos                                                                              |
+| Pesquisar Sinais                   | Permite explorar os sinais disponíveis e ver um preview dos gifs                                                                                                |
+| Favoritar Sinais                   | Permite selecionar um sinal e deixá-lo destacado no menu de pesquisa                                                                                            |
+| Certificado                        | Certificado concedido ao usuário que concluir todos os módulos de questões pelo menos uma vez                                                                   |
 
 
 ## 📚 Tecnologias & Bibliotecas Utilizadas
