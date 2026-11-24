@@ -228,34 +228,48 @@ def abrir_licao(janela_pai, usuario_id, modulo_id):
 
 def abrir_ranking(janela_pai, usuario_id):
     ranking = chamar_api("GET", "/ranking")
-    meu = chamar_api("GET", f"/usuarios/{usuario_id}/pontuacao")
-    if ranking is None or meu is None:
+    if ranking is None:
         return
 
     janela = ctk.CTkToplevel(janela_pai)
     janela.title("Ranking")
-    janela.geometry("520x680")
+    janela.geometry("520x620")
 
     ctk.CTkLabel(janela, text="Ranking", font=("Arial", 28, "bold")).pack(pady=15)
-    for posicao, linha in enumerate(ranking, start=1):
-        ctk.CTkLabel(
-            janela,
-            text=f"{posicao}º  {linha['usuario']}  -  {linha['pontos']} pts  ({linha['acertos']} acertos)",
-            font=("Arial", 16),
-        ).pack(pady=3)
 
-    total = meu["total"]
-    ctk.CTkLabel(janela, text="Sua pontuação", font=("Arial", 20, "bold")).pack(pady=(25, 5))
-    ctk.CTkLabel(
-        janela,
-        text=f"Total: {total['pontos']} pts  |  {total['acertos']} acertos em {total['respondidas']} respostas",
-        font=("Arial", 15),
-    ).pack()
-    for m in meu["por_modulo"]:
+    if not ranking:
         ctk.CTkLabel(
             janela,
-            text=f"{m['modulo']}: {m['pontos']} pts ({m['acertos']}/{m['respondidas']})",
-            font=("Arial", 14),
-        ).pack(pady=2)
+            text="Ninguém pontuou ainda.\nFaça uma lição para entrar no ranking!",
+            font=("Arial", 16),
+        ).pack(pady=30)
+
+    # procura a linha do usuário logado
+    minha = None
+    for linha in ranking:
+        if linha["usuario_id"] == usuario_id:
+            minha = linha
+
+    # mostra o top 10 e destaca o usuário logado
+    for linha in ranking[:10]:
+        eu = linha["usuario_id"] == usuario_id
+        texto = f"{linha['ranking']}º   {linha['nome']}   -   {linha['acertos']} acertos"
+        if eu:
+            texto += "   (você)"
+        label = ctk.CTkLabel(janela, text=texto, font=("Arial", 16))
+        label.pack(pady=3)
+        if eu:
+            label.configure(text_color="gold")
+
+    # se o usuário ficou fora do top 10, mostra a posição dele embaixo
+    if ranking:
+        if minha is None:
+            mensagem = "Você ainda não tem acertos."
+        elif minha not in ranking[:10]:
+            mensagem = f"Sua posição: {minha['ranking']}º  ({minha['acertos']} acertos)"
+        else:
+            mensagem = ""
+        if mensagem:
+            ctk.CTkLabel(janela, text=mensagem, font=("Arial", 15, "bold")).pack(pady=(20, 5))
 
     ctk.CTkButton(janela, text="Fechar", command=janela.destroy).pack(pady=20)

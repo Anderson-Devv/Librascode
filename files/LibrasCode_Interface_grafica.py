@@ -20,17 +20,20 @@ cursor = conexao.cursor()
 # ==========================
 # JANELA PRINCIPAL
 # ==========================
+class Janela_Principal(self, ctk.CTk(), img, fundo)
+
+
 
 janela_inicial = ctk.CTk()
 janela_inicial.title("LibrasCode")
-janela_inicial.geometry("1920x1080")
+janela_inicial.geometry("1200x1000")
 
 
 
 
 imagem_login = ctk.CTkImage(
-        light_image=Image.open("./midia/500x400.jpeg"),
-        dark_image=Image.open("./midia/500x400.jpeg"),
+        light_image=Image.open("./500x400.jpeg"),
+        dark_image=Image.open("./500x400.jpeg"),
         size=(500, 400)
     )
 
@@ -138,7 +141,7 @@ def abrir_cadastro():
 
             cursor.execute(
                 """
-                INSERT INTO librascode
+                INSERT INTO cadastrolibrascode
                 (usuario, senha, email)
                 VALUES (%s,%s,%s)
                 """,
@@ -193,6 +196,9 @@ def abrir_menu_usuario(email, usuario_id):
     def fazer_licao():
         abrir_modulos(janela, usuario_id)
 
+    def ver_ranking():
+        abrir_ranking(janela, usuario_id)
+
     def alterar_senha():
 
         dialog = ctk.CTkInputDialog(
@@ -207,7 +213,7 @@ def abrir_menu_usuario(email, usuario_id):
 
         cursor.execute(
             """
-            UPDATE librascode
+            UPDATE cadastrolibrascode
             SET senha=%s
             WHERE email=%s
             """,
@@ -236,7 +242,7 @@ def abrir_menu_usuario(email, usuario_id):
 
         cursor.execute(
             """
-            UPDATE librascode
+            UPDATE cadastrolibrascode
             SET email=%s
             WHERE email=%s
             """,
@@ -262,7 +268,7 @@ def abrir_menu_usuario(email, usuario_id):
 
             cursor.execute(
                 """
-                DELETE FROM librascode
+                DELETE FROM cadastrolibrascode
                 WHERE email=%s
                 """,
                 (email,)
@@ -281,7 +287,14 @@ def abrir_menu_usuario(email, usuario_id):
         janela,
         text="abrir lição",
         width=250,
-        command= fazer_licao
+        command=fazer_licao
+    ).pack(pady=10)
+
+    ctk.CTkButton(
+        janela,
+        text="Ranking",
+        width=250,
+        command=ver_ranking
     ).pack(pady=10)
 
     ctk.CTkButton(
@@ -426,5 +439,3 @@ ctk.CTkButton(
     height=50,
     command=janela_inicial.destroy
 ).pack(pady=15)
-
-janela_inicial.mainloop()

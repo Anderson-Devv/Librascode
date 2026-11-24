@@ -1,10 +1,3 @@
--- LibrasCode: tabelas dos 2 novos requisitos (questões + pontuação)
--- Rode no MySQL, no mesmo banco que você já usa (USE et;)
-
--- A tabela librascode deve ter idlibrascode como chave primária.
--- Confira com:  DESCRIBE librascode;
--- Se não tiver essa coluna, ajuste a tabela antes de criar as respostas.
-
 CREATE TABLE IF NOT EXISTS modulos (
     id        INT AUTO_INCREMENT PRIMARY KEY,
     nome      VARCHAR(50)  NOT NULL,

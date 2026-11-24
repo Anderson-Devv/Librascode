@@ -28,4 +28,4 @@ def fazer_login(email, senha):
         if cursor is not None:
             cursor.close()
         if conexao is not None:
-            conexao.close()  
+            conexao.close() 
