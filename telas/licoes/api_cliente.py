@@ -34,3 +34,13 @@ class APICliente:
             "GET",
             f"/usuarios/{usuario_id}/perfil"
         )
+    def favoritar(self, usuario_id, sinal_id):
+
+        return self.chamar(
+            "POST",
+            "/favoritos",
+            json={
+                "usuario_id": usuario_id,
+                "sinal_id": sinal_id
+            }
+        )

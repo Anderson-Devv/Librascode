@@ -2,6 +2,7 @@ import customtkinter as ctk
 from telas.licoes.api_cliente import APICliente
 from telas.licoes.midia import GerenciadorMidia
 from telas.fundo import FundoEscalavel
+from tkinter import messagebox
 class Pesquisa(ctk.CTkFrame):
      
     def __init__(self, master, controlador):
@@ -95,12 +96,44 @@ class Pesquisa(ctk.CTkFrame):
         
         for item in resultado:
             
+            frame = ctk.CTkFrame(self.frame_modulos)
+            frame.pack(pady=5, fill="x")
+            
             ctk.CTkButton(
                 self.frame_modulos,
                 text=item["palavra"],
                 width=250,
                 command=lambda i=item: self.abrir_sinal(i)
             ).pack(pady=5)
+            
+            ctk.CTkButton(
+                frame,
+                text="favoritar",
+                width=50,
+                command=lambda i=item:
+                self.favoritar_sinal(i["id"])
+            ).pack(side="left")
+            
+    def configurar_usuario(self, usuario_id):
+        self.usuario_id = usuario_id
+            
+    def favoritar_sinal(self, sinal_id):
+
+        resposta = self.api.chamar(
+            "POST",
+            "/favoritos",
+            json={
+                "usuario_id": self.usuario_id,
+                "sinal_id": sinal_id
+            }
+        )
+
+        if resposta:
+
+            messagebox.showinfo(
+                "Favoritos",
+            "Sinal adicionado aos favoritos!"
+        )
             
     def abrir_sinal(self, item):
 

@@ -8,6 +8,8 @@ from telas.tela_cadastro import TelaCadastro
 from telas.tela_licao import TelaLicao
 from telas.licoes.pesquisa import Pesquisa
 from telas.licoes.conquistas import TelaConquistas
+from telas.licoes.favoritos import TelaFavoritos
+
 class Interface:
 
     def __init__(self):
@@ -32,6 +34,7 @@ class Interface:
         self.adicionar_tela("ranking", TelaRanking)
         self.adicionar_tela("pesquisa", Pesquisa)
         self.adicionar_tela("conquistas",TelaConquistas)
+        self.adicionar_tela("favoritos", TelaFavoritos)
         self.mostrar_tela("login")
         
     def adicionar_tela(self, nome, classe_tela):

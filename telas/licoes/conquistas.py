@@ -94,8 +94,12 @@ class TelaConquistas(ctk.CTkFrame):
         state="normal"
         )
                 
+        ultima = conquistas[-1]
+
+        self.sticker = ultima["sticker"]
+
         self.label_conquista.configure(
-            text=f"{conquista}\n{pontos} pontos"
+            text=f"{ultima['nome']}\n{ultima['descricao']}"
         )
 
         caminho = os.path.join(
@@ -104,11 +108,21 @@ class TelaConquistas(ctk.CTkFrame):
             self.sticker
         )
 
-        imagem = ctk.CTkImage(
-            Image.open(caminho),
-            size=(200, 200)
+        imagem_original = Image.open(caminho)
+
+        largura_original, altura_original = imagem_original.size
+
+        nova_largura = 200
+        nova_altura = int(
+            altura_original * (nova_largura / largura_original)
         )
 
+        imagem = ctk.CTkImage(
+            light_image=imagem_original,
+            dark_image=imagem_original,
+            size=(nova_largura, nova_altura)
+        )
+        
         self.label_imagem.configure(
             image=imagem,
             text=""

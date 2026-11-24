@@ -2,7 +2,6 @@ import os
 import random
 from flask import Flask, jsonify, request, send_from_directory
 from gerenciamento_dados.librascodebd import conexao_banco
-from tkinter import filedialog
 
 app = Flask(__name__)
 
@@ -81,7 +80,7 @@ def listar_modulos():
     )
     return jsonify(modulos)
 
-# ---------- Pesquisa ----------
+# ---------- Pesquisa e Favoritar----------
 
 @app.get("/pesquisa")
 def buscar_itens():
@@ -98,7 +97,6 @@ def buscar_itens():
         (f"%{termo}%",)
     )
     return jsonify(pesquisa)
-
 
 @app.get("/modulos/<int:modulo_id>/licao")
 def gerar_licao(modulo_id):
@@ -129,6 +127,61 @@ def gerar_licao(modulo_id):
             }
         )
     return jsonify({"modulo_id": modulo_id, "questoes": questoes})
+
+@app.post("/favoritos")
+def favoritar():
+
+    dados = request.get_json()
+
+    usuario_id = dados.get("usuario_id")
+    sinal_id = dados.get("sinal_id")
+
+    ja_existe = consultar(
+            """
+            SELECT id
+            FROM favoritos
+            WHERE usuario_id = %s
+            AND sinal_id = %s
+            """,
+        (usuario_id, sinal_id),
+        um=True
+    )
+
+    if ja_existe:
+        return jsonify({
+            "mensagem": "Já favoritado."
+        })
+    executar(
+        """
+            INSERT INTO favoritos
+            (usuario_id, sinal_id)
+            VALUES (%s, %s)
+            """,
+        (usuario_id, sinal_id)
+    )
+
+    return jsonify({
+        "mensagem": "Favorito adicionado!"
+    })
+    
+@app.get("/favoritos/<int:usuario_id>")
+def listar_favoritos(usuario_id):
+
+    favoritos = consultar(
+        """
+        SELECT
+            s.id,
+            s.palavra,
+            s.midia
+        FROM favoritos f
+        INNER JOIN sinais s
+            ON s.id = f.sinal_id
+        WHERE f.usuario_id = %s
+        """,
+        (usuario_id,)
+    )
+
+    return jsonify(favoritos)
 
 # ---------- respostas e pontuação ----------
 
@@ -166,7 +219,7 @@ def responder():
     
     return jsonify({"acertou": acertou, "correta": sinal["palavra"], "pontos": pontos})
 
-# ---------- conquistas ----------
+# ---------- conquistas e certificado ----------
 def verificar_conquistas(usuario_id):
     total_pontos = consultar(
         """
@@ -176,7 +229,8 @@ def verificar_conquistas(usuario_id):
         """,
         (usuario_id,),
         um=True
-    )["total"]
+    )
+    pontos = total_pontos["total"]
 
     conquistas = consultar(
         """
@@ -184,7 +238,7 @@ def verificar_conquistas(usuario_id):
         FROM conquistas
         WHERE pontos_necessarios <= %s
         """,
-        (total_pontos,)
+        (pontos,)
     )
 
     for conquista in conquistas:
@@ -209,7 +263,8 @@ def verificar_conquistas(usuario_id):
                 """,
                 (usuario_id, conquista["id"])
             )
-
+    return pontos
+    
 @app.get("/conquistas/<int:usuario_id>")
 def listar_conquistas(usuario_id):
 
@@ -218,18 +273,42 @@ def listar_conquistas(usuario_id):
         SELECT
             c.nome,
             c.descricao,
-            c.sticker
+            c.sticker,
             c.pontos_necessarios
-        FROM conquistas c
-        INNER JOIN usuario_conquistas uc
-            ON uc.conquista_id = c.id
-        WHERE uc.usuario_id = %s
-        ORDER BY c.pontos_necessarios
+            FROM conquistas c
+            INNER JOIN usuario_conquistas uc
+                ON uc.conquista_id = c.id
+            WHERE uc.usuario_id = %s
+            ORDER BY c.pontos_necessarios
         """,
         (usuario_id,)
     )
 
     return jsonify(conquistas)
+
+def verificar_certificado(usuario_id):
+
+    resultado_modulos = consultar(
+        """
+        SELECT COUNT(*) AS total
+        FROM modulos
+        """,
+        um=True
+    )
+    total_modulos = resultado_modulos["total"]
+
+    resultado_concluidos = consultar(
+        """
+        SELECT COUNT(DISTINCT modulo_id) AS total
+        FROM historico_modulo
+        WHERE usuario_id = %s
+        """,
+        (usuario_id,),
+        um=True
+    )
+    concluidos = resultado_concluidos["total"]
+
+    return concluidos >= total_modulos
 
 @app.get("/stickers/<path:arquivo>")
 def servir_sticker(arquivo):

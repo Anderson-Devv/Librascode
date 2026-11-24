@@ -1,7 +1,8 @@
 import customtkinter as ctk
-from conta.gerenciamento_conta import Conta
 from telas.fundo import FundoEscalavel
-
+from telas.licoes.api_cliente import APICliente
+from tkinter import messagebox
+from conta.recompensas import Recompensas
 class MenuUsuario(ctk.CTkFrame):
 
     def __init__(self, master, controlador):
@@ -37,7 +38,14 @@ class MenuUsuario(ctk.CTkFrame):
             self,
             text="Pesquisar Sinais",
             width=250,
-            command=lambda: self.controlador.mostrar_tela("pesquisa")
+            command=self.abrir_pesquisa
+        ).pack(pady=10)
+
+        ctk.CTkButton(
+            self,
+            text="Favoritos",
+            width=250,
+            command=self.abrir_favoritos
         ).pack(pady=10)
 
         ctk.CTkButton(
@@ -53,6 +61,16 @@ class MenuUsuario(ctk.CTkFrame):
             width=250,
             command=self.abrir_conquistas
 )       .pack(pady=10)
+        
+        self.botao_certificado = ctk.CTkButton(
+            self,
+            text="Baixar Certificado",
+            width=250,
+            command=self.baixar_certificado,
+            state="disabled"
+        )
+
+        self.botao_certificado.pack(pady=10)
 
         ctk.CTkButton(
             self,
@@ -102,6 +120,19 @@ class MenuUsuario(ctk.CTkFrame):
         ranking = self.controlador.telas["ranking"]
         ranking.configurar_usuario(self.usuario_id)
         self.controlador.mostrar_tela("ranking")
+        
+    def abrir_pesquisa(self):
+
+        pesquisa = self.controlador.telas["pesquisa"]
+
+        pesquisa.configurar_usuario(
+            self.usuario_id
+        )
+
+        self.controlador.mostrar_tela(
+            "pesquisa"
+        )
+        
     def abrir_conquistas(self):
 
         conquistas = self.controlador.telas["conquistas"]
@@ -135,14 +166,70 @@ class MenuUsuario(ctk.CTkFrame):
         self.usuario = usuario
         self.usuario_id = usuario_id
         self.conta = conta
-
         self.label_usuario.configure(
             text=f"Usuário logado:\n{self.usuario}"
         )
-    
+        self.verificar_certificado()
+        
     def alterar_usuario(self):
         if self.conta.alterar_usuario():
             self.novo_usuario = self.conta.usuario
             self.label_usuario.configure(
                 text=f"Usuário logado:\n{self.usuario}"
+        )
+    def abrir_favoritos(self):
+
+        favoritos = self.controlador.telas["favoritos"]
+
+        favoritos.configurar_usuario(
+            self.usuario_id
+        )
+
+        self.controlador.mostrar_tela(
+            "favoritos"
+        )
+        
+    def verificar_certificado(self):
+        resposta = APICliente().chamar(
+            "GET",
+            f"/certificado/{self.usuario_id}"
+        )
+
+        if resposta and resposta["liberado"]:
+
+            self.botao_certificado.configure(
+                state="normal"
+            )
+
+        else:
+            self.botao_certificado.configure(
+                state="disabled"
+            )
+            
+    def baixar_certificado(self):
+
+        recompensas = Recompensas()
+
+        ranking = APICliente().chamar(
+            "GET",
+            "/ranking"
+        )
+
+        pontos = 0
+
+        for usuario in ranking:
+
+            if usuario["usuario_id"] == self.usuario_id:
+
+                pontos = usuario["pontos"]
+                break
+
+        caminho = recompensas.gerar_certificado(
+            self.usuario,
+            pontos
+        )
+
+        messagebox.showinfo(
+            "Certificado",
+            f"Certificado gerado com sucesso!\n\n{caminho}"
         )
