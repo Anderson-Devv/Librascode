@@ -330,6 +330,22 @@ def servir_sticker(arquivo):
 
 @app.post("/historico")
 def registrar_historico():
+    
+    ja_existe = consultar(
+        """
+        SELECT id
+        FROM historico_modulo
+        WHERE usuario_id = %s
+        AND modulo_id = %s
+        """,
+        (usuario_id, modulo_id),
+        um=True
+    )
+
+    if ja_existe:
+        return jsonify({
+            "mensagem": "Módulo já registrado."
+        }), 200
 
     dados = request.get_json(silent=True) or {}
 
