@@ -9,6 +9,7 @@ app = Flask(__name__)
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PASTA_MIDIA = os.path.join(RAIZ, "files", "midia")
 PASTA_STICKERS = os.path.join(RAIZ, "files", "stickers")
+PASTA_GUIAS = os.path.join(RAIZ, "files", "guias")
 PONTOS_POR_ACERTO = 10
 QTD_PADRAO = 5
 
@@ -79,6 +80,17 @@ def listar_modulos():
         """
     )
     return jsonify(modulos)
+
+# ---------- Guia inicial ----------
+
+@app.get("/guia")
+def baixar_guia():
+
+    return send_from_directory(
+        PASTA_GUIAS,
+        "guia_licoes.pdf",
+        as_attachment=True
+    )
 
 # ---------- Pesquisa e Favoritar----------
 

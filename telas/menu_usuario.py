@@ -1,8 +1,9 @@
 import customtkinter as ctk
 from telas.fundo import FundoEscalavel
 from telas.licoes.api_cliente import APICliente
-from tkinter import messagebox
+from tkinter import filedialog, messagebox
 from conta.recompensas import Recompensas
+import requests 
 class MenuUsuario(ctk.CTkFrame):
 
     def __init__(self, master, controlador):
@@ -33,6 +34,13 @@ class MenuUsuario(ctk.CTkFrame):
             width=250,
             command=self.fazer_licao
          ).pack(pady=10)
+        
+        ctk.CTkButton(
+            self,
+            text="Baixar Guia das Lições",
+            width=250,
+            command=self.baixar_guia
+        ).pack(pady=10)
 
         ctk.CTkButton(
             self,
@@ -232,4 +240,26 @@ class MenuUsuario(ctk.CTkFrame):
         messagebox.showinfo(
             "Certificado",
             f"Certificado gerado com sucesso!\n\n{caminho}"
+        )
+        
+    def baixar_guia(self):
+
+        resposta = requests.get(
+            "http://127.0.0.1:5000/guia"
+        )
+
+        destino = filedialog.asksaveasfilename(
+            initialfile="guia_licoes.pdf",
+            defaultextension=".pdf"
+        )
+
+        if not destino:
+            return
+
+        with open(destino, "wb") as arquivo:
+            arquivo.write(resposta.content)
+
+        messagebox.showinfo(
+            "Sucesso",
+            "Guia baixado com sucesso!"
         )
