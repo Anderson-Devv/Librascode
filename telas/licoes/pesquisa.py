@@ -47,8 +47,17 @@ class Pesquisa(ctk.CTkFrame):
         )
         self.label_mensagem.pack(pady=5)
 
-        self.frame_modulos = ctk.CTkFrame(self)
-        self.frame_modulos.pack(pady=10)
+        self.frame_modulos = ctk.CTkScrollableFrame(
+        self,
+        width=600,
+        height=400
+        )
+
+        self.frame_modulos.pack(
+            pady=10,
+            fill="both",
+            expand=True
+        )
 
         self.label_gif = ctk.CTkLabel(
             self,
