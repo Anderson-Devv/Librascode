@@ -68,7 +68,7 @@ https://drive.google.com/file/d/1ddffPOG2tuZTm98RcU_hfTJZ1_W9wj93/view?usp=shari
 
 ## 📄 Artigo:
 ```bash
-Ainda será inserido...
+https://www.overleaf.com/project/6ae1ed27c58909a3ec188a08
 ```
 
 ## 🚹 Devs:
