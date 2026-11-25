@@ -57,5 +57,3 @@ class Interface:
 if __name__ == "__main__":
     app = Interface()
     app.executar()
-
-print("Arquivo interface.py carregado")
