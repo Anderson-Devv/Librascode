@@ -1,12 +1,7 @@
-import os
-
 from datetime import datetime
-
 from reportlab.pdfgen import canvas
 from reportlab.lib import colors
-
 from tkinter import filedialog
-
 
 class Recompensas:
 
