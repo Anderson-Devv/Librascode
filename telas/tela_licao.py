@@ -13,7 +13,7 @@ class TelaLicao(ctk.CTkFrame):
         self.usuario_id = None
         self.modulo_id = None
         
-        self.fundo = FundoEscalavel(self, "500x400.jpeg")
+        self.fundo = FundoEscalavel(self, "tela do ranking.jpeg")
         
         self.api = APICliente()
         self.midia = GerenciadorMidia()

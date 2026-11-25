@@ -12,7 +12,7 @@ class MenuUsuario(ctk.CTkFrame):
 
         self.controlador = controlador
 
-        self.fundo = FundoEscalavel(self, "500x400.jpeg")
+        self.fundo = FundoEscalavel(self, "tela do ranking.jpeg")
 
         self.email = None
         self.usuario_id = None

@@ -9,7 +9,7 @@ class TelaCadastro(ctk.CTkFrame):
 
         self.controlador = controlador
 
-        self.fundo = FundoEscalavel(self, "cartão librascode.jpeg")
+        self.fundo = FundoEscalavel(self, "tela do ranking.jpeg")
         
         self.criar_componentes()
 
