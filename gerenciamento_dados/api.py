@@ -9,7 +9,7 @@ app = Flask(__name__)
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PASTA_MIDIA = os.path.join(RAIZ, "files", "midia")
 PASTA_STICKERS = os.path.join(RAIZ, "files", "stickers")
-PASTA_GUIAS = os.path.join(RAIZ, "files", "guias")
+PASTA_GUIAS = os.path.join(RAIZ, "files", "guia")
 PONTOS_POR_ACERTO = 10
 QTD_PADRAO = 5
 
