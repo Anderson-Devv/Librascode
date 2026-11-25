@@ -41,6 +41,7 @@ Inicialmente, o LibrasCode está voltado para o público universitário da Unive
 | Pillow (PIL)                       | Carregar, redimensionar e manipular imagens utilizadas na interface e nas lições.                                                        |
 | requests                           | Fazer requisições HTTP para a API do LibrasCode, permitindo que a interface solicite dados e envie respostas.                            |
 | Framework - Flask                  | Desenvolver a API responsável pela comunicação entre a interface gráfica e o banco de dados (retorna dados para a interface em JSON      |
+| ReportLab                          | Gerar arquivos PDF diretamente pelo código, também desenha as bordas, linhas e textos do certificado                                     |
 
 ## 💻 Como Executar o Código:
 1. Clone este repositório:
