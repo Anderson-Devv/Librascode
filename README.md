@@ -28,6 +28,8 @@ Inicialmente, o LibrasCode está voltado para o público universitário da Unive
 | Pesquisar Sinais                   | Permite explorar os sinais disponíveis e ver um preview dos gifs                                                                                                |
 | Favoritar Sinais                   | Permite selecionar um sinal e deixá-lo destacado no menu de pesquisa                                                                                            |
 | Certificado                        | Certificado concedido ao usuário que concluir todos os módulos de questões pelo menos uma vez                                                                   |
+| Material de Apoio - Guia Inicial   | PDF que contém instruções sobre a didática da plataforma e outras informações importantes                                                                       |
+
 
 
 ## 📚 Tecnologias & Bibliotecas Utilizadas
