@@ -33,7 +33,7 @@ Inicialmente, o LibrasCode está voltado para o público universitário da Unive
 ## 🚀 Release 2.1 - EXTRA! 👌🏽
 | Funcionalidade / Enhacement        | Descrição                                                                                                                                                       |
 | ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Sugerir Sinais                     | Permite que um usuário faça upload de algum arquivo sugerindo um novo sinal para ser inserido na plataforma, no qual somente administradores conseguem aprovar  |   
+| Sugerir Sinais                     | Permite que um usuário faça upload de algum arquivo sugerindo um novo sinal para ser inserido na plataforma, no qual somente moderadores conseguem aprovar      |   
 
 
 
