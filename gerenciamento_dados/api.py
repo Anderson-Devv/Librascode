@@ -232,6 +232,7 @@ def responder():
     return jsonify({"acertou": acertou, "correta": sinal["palavra"], "pontos": pontos})
 
 # ---------- conquistas e certificado ----------
+
 def verificar_conquistas(usuario_id):
     total_pontos = consultar(
         """
@@ -334,6 +335,218 @@ def certificado(usuario_id):
 @app.get("/stickers/<path:arquivo>")
 def servir_sticker(arquivo):
     return send_from_directory(PASTA_STICKERS, arquivo)
+
+# ---------- nível de permissão do usuário e sujestões ----------
+
+@app.get("/nivel/<int:usuario_id>")
+def nivel(usuario_id):
+
+    return jsonify({
+        "nivel": obter_nivel(usuario_id)
+    })
+    
+def obter_nivel(usuario_id):
+
+    conquista = consultar(
+        """
+        SELECT c.nome
+        FROM conquistas c
+        INNER JOIN usuario_conquistas uc
+            ON uc.conquista_id = c.id
+        WHERE uc.usuario_id = %s
+        ORDER BY c.pontos_necessarios DESC
+        LIMIT 1
+        """,
+        (usuario_id,),
+        um=True
+    )
+
+    if not conquista:
+        return "Usuario"
+
+    return conquista["nome"]
+
+@app.post("/sugestoes")
+def enviar_sugestao():
+
+    dados = request.get_json()
+
+    usuario_id = dados["usuario_id"]
+
+    nivel = obter_nivel(usuario_id)
+
+    if nivel == "Usuario":
+
+        return erro(
+            "É necessário possuir pelo menos Bronze."
+        )
+
+    executar(
+        """
+        INSERT INTO sugestoes_sinais
+        (
+            usuario_id,
+            palavra,
+            modulo_id,
+            descricao,
+            midia
+        )
+        VALUES (%s,%s,%s,%s,%s)
+        """,
+        (
+            usuario_id,
+            dados["palavra"],
+            dados["modulo_id"],
+            dados["descricao"],
+            dados["midia"]
+        )
+    )
+
+    return jsonify(
+        {"mensagem":"Sugestão enviada"}
+    )
+    
+@app.get("/sugestoes")
+def listar_sugestoes():
+
+    return jsonify(
+        consultar(
+            """
+            SELECT *
+            FROM sugestoes_sinais
+            WHERE status='Pendente'
+            """
+        )
+    )
+    
+@app.get("/sugestoes/pendentes")
+def listar_pendentes():
+
+    sugestoes = consultar(
+        """
+        SELECT
+            s.id,
+            s.palavra,
+            s.descricao,
+            s.midia,
+            s.modulo_id,
+            c.usuario
+        FROM sugestoes_sinais s
+        INNER JOIN cadastrolibrascode c
+            ON c.idcadastrolibrascode = s.usuario_id
+        WHERE s.status = 'Pendente'
+        ORDER BY s.data_envio
+        """
+    )
+
+    return jsonify(sugestoes)
+
+@app.post("/sugestoes/<int:sugestao_id>/aprovar")
+def aprovar_sugestao(sugestao_id):
+    
+    dados = request.get_json()
+
+    nivel = obter_nivel(
+        dados["usuario_id"]
+    )
+
+    if nivel not in [
+        "Ouro",
+        "Diamante",
+        "Administrador"
+    ]:
+        return erro("Sem permissão.")
+
+    sugestao = consultar(
+        """
+        SELECT *
+        FROM sugestoes_sinais
+        WHERE id = %s
+        """,
+        (sugestao_id,),
+        um=True
+    )
+
+    if not sugestao:
+        return erro("Sugestão não encontrada.")
+
+    executar(
+        """
+        INSERT INTO sinais
+        (
+            palavra,
+            modulo_id,
+            midia
+        )
+        VALUES (%s,%s,%s)
+        """,
+        (
+            sugestao["palavra"],
+            sugestao["modulo_id"],
+            sugestao["midia"]
+        )
+    )
+
+    executar(
+        """
+        UPDATE sugestoes_sinais
+        SET status = 'Aprovado'
+        WHERE id = %s
+        """,
+        (sugestao_id,)
+    )
+
+    return jsonify({
+        "mensagem":"Sugestão aprovada!"
+    })
+
+@app.post("/sugestoes/<int:sugestao_id>/recusar")
+def recusar_sugestao(sugestao_id):
+    
+    dados = request.get_json()
+
+    nivel = obter_nivel(
+        dados["usuario_id"]
+    )
+
+    if nivel not in [
+        "Ouro",
+        "Diamante",
+        "Administrador"
+    ]:
+        return erro("Sem permissão.")
+
+    executar(
+        """
+        UPDATE sugestoes_sinais
+        SET status = 'Recusado'
+        WHERE id = %s
+        """,
+        (sugestao_id,)
+    )
+
+    return jsonify({
+        "mensagem":"Sugestão recusada."
+    })
+    
+@app.get("/minhas-sugestoes/<int:usuario_id>")
+def minhas_sugestoes(usuario_id):
+
+    sugestoes = consultar(
+        """
+        SELECT
+            palavra,
+            descricao,
+            status,
+            data_envio
+        FROM sugestoes_sinais
+        WHERE usuario_id = %s
+        ORDER BY data_envio DESC
+        """,
+        (usuario_id,)
+    )
+
+    return jsonify(sugestoes)
 
 # ---------- histórico de lições ----------
 

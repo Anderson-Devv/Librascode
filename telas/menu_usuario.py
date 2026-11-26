@@ -33,7 +33,7 @@ class MenuUsuario(ctk.CTkFrame):
             text="Abrir lição",
             width=250,
             command=self.fazer_licao
-         ).pack(pady=10)
+        ).pack(pady=10)
         
         ctk.CTkButton(
             self,
@@ -61,14 +61,39 @@ class MenuUsuario(ctk.CTkFrame):
             text="Ranking",
             width=250,
             command=self.abrir_ranking
-         ).pack(pady=10)
+        ).pack(pady=10)
 
         ctk.CTkButton(
             self,
             text="Conquistas",
             width=250,
             command=self.abrir_conquistas
-)       .pack(pady=10)
+        ).pack(pady=10)
+        
+        self.botao_sugestao = ctk.CTkButton(
+            self,
+            text="Enviar Sugestão",
+            width=250,
+            command=self.abrir_sugestoes
+        )
+
+        self.botao_sugestao.pack(pady=10)
+        
+        self.botao_revisao = ctk.CTkButton(
+            self,
+            text="Revisar Sugestões",
+            width=250,
+            command=self.abrir_revisao
+        )
+
+        self.botao_revisao.pack(pady=10)
+        
+        ctk.CTkButton(
+            self,
+            text="Minhas Sugestões",
+            width=250,
+            command=self.abrir_minhas_sugestoes
+        ).pack(pady=10)
         
         self.botao_certificado = ctk.CTkButton(
             self,
@@ -178,6 +203,8 @@ class MenuUsuario(ctk.CTkFrame):
             text=f"Usuário logado:\n{self.usuario}"
         )
         self.verificar_certificado()
+        self.verificar_permissoes()
+        
         
     def alterar_usuario(self):
         if self.conta.alterar_usuario():
@@ -265,3 +292,75 @@ class MenuUsuario(ctk.CTkFrame):
             "Sucesso",
             "Guia baixado com sucesso!"
         )
+        
+    def abrir_sugestoes(self):
+
+        tela = self.controlador.telas["enviar_sugestao"]
+
+        tela.configurar_usuario(
+            self.usuario_id
+        )
+
+        self.controlador.mostrar_tela(
+            "enviar_sugestao"
+        )
+        
+    def abrir_revisao(self):
+
+        tela = self.controlador.telas[
+            "revisar_sugestoes"
+        ]
+
+        tela.configurar_usuario(
+            self.usuario_id
+        )
+
+        self.controlador.mostrar_tela(
+            "revisar_sugestoes"
+        )
+        
+    def abrir_minhas_sugestoes(self):
+
+        tela = self.controlador.telas[
+            "minhas_sugestoes"
+        ]
+
+        tela.configurar_usuario(
+            self.usuario_id
+        )
+
+        self.controlador.mostrar_tela(
+            "minhas_sugestoes"
+        )
+        
+    def verificar_permissoes(self):
+
+        resposta = APICliente().chamar(
+            "GET",
+            f"/nivel/{self.usuario_id}"
+        )
+
+        if not resposta:
+            return
+
+        nivel = resposta["nivel"]
+
+        if nivel == "Usuario":
+
+            self.botao_sugestao.pack_forget()
+            self.botao_revisao.pack_forget()
+
+        elif nivel in ["Bronze", "Prata"]:
+
+            self.botao_sugestao.pack(pady=10)
+
+            self.botao_revisao.pack_forget()
+
+        elif nivel in [
+            "Ouro",
+            "Diamante",
+            "Administrador"
+        ]:
+
+            self.botao_sugestao.pack(pady=10)
+            self.botao_revisao.pack(pady=10)

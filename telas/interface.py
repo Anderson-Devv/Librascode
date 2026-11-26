@@ -9,7 +9,9 @@ from telas.tela_licao import TelaLicao
 from telas.licoes.pesquisa import Pesquisa
 from telas.licoes.conquistas import TelaConquistas
 from telas.licoes.favoritos import TelaFavoritos
-
+from telas.sujestoes.enviar_sugestao import TelaEnviarSugestao
+from telas.sujestoes.revisar_sugestoes import TelaRevisarSugestoes
+from telas.sujestoes.minhas_sugestoes import TelaMinhasSugestoes
 class Interface:
 
     def __init__(self):
@@ -35,6 +37,9 @@ class Interface:
         self.adicionar_tela("pesquisa", Pesquisa)
         self.adicionar_tela("conquistas",TelaConquistas)
         self.adicionar_tela("favoritos", TelaFavoritos)
+        self.adicionar_tela("enviar_sugestao", TelaEnviarSugestao)
+        self.adicionar_tela("revisar_sugestoes", TelaRevisarSugestoes)
+        self.adicionar_tela("minhas_sugestoes", TelaMinhasSugestoes)
         self.mostrar_tela("login")
         
     def adicionar_tela(self, nome, classe_tela):
