@@ -131,7 +131,10 @@ class TelaRevisarSugestoes(ctk.CTkFrame):
 
         resposta = self.api.chamar(
             "POST",
-            f"/sugestoes/{sugestao_id}/aprovar"
+            f"/sugestoes/{sugestao_id}/aprovar",
+            json={
+                "usuario_id": self.usuario_id
+            }
         )
 
         if resposta:
@@ -147,7 +150,10 @@ class TelaRevisarSugestoes(ctk.CTkFrame):
 
         resposta = self.api.chamar(
             "POST",
-            f"/sugestoes/{sugestao_id}/recusar"
+            f"/sugestoes/{sugestao_id}/recusar",
+            json={
+                "usuario_id": self.usuario_id
+            }
         )
 
         if resposta:
