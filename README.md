@@ -30,6 +30,11 @@ Inicialmente, o LibrasCode está voltado para o público universitário da Unive
 | Certificado                        | Certificado concedido ao usuário que concluir todos os módulos de questões pelo menos uma vez                                                                   |
 | Material de Apoio - Guia Inicial   | PDF que contém instruções sobre a didática da plataforma e outras informações importantes                                                                       |
 
+## 🚀 Release 2.1 - EXTRA! 👌🏽
+| Funcionalidade / Enhacement        | Descrição                                                                                                                                                       |
+| ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Sugerir Sinais                     | Permite que um usuário faça upload de algum arquivo sugerindo um novo sinal para ser inserido na plataforma, no qual somente administradores conseguem aprovar  |   
+
 
 
 ## 📚 Tecnologias & Bibliotecas Utilizadas
