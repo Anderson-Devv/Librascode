@@ -9,9 +9,9 @@ from telas.tela_licao import TelaLicao
 from telas.licoes.pesquisa import Pesquisa
 from telas.licoes.conquistas import TelaConquistas
 from telas.licoes.favoritos import TelaFavoritos
-from telas.sujestoes.enviar_sugestao import TelaEnviarSugestao
-from telas.sujestoes.revisar_sugestoes import TelaRevisarSugestoes
-from telas.sujestoes.minhas_sugestoes import TelaMinhasSugestoes
+from telas.sujestao.enviar_sugestao import TelaEnviarSugestao
+from telas.sujestao.revisar_sugestoes import TelaRevisarSugestoes
+from telas.sujestao.minhas_sugestoes import TelaMinhasSugestoes
 class Interface:
 
     def __init__(self):
